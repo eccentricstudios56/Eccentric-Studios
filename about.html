@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About | Eccentric Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <a class="brand" href="first.html" aria-label="Eccentric Studios home">
+        <img class="brand-logo" src="running images/WhatsApp Image 2026-06-28 at 8.22.03 PM.jpeg" alt="Eccentric Studios logo" />
+      </a>
+      <nav>
+        <a href="first.html" data-i18n="navHome">Home</a>
+        <a href="order.html" data-i18n="navOrder">Order</a>
+        <a href="running images/games.html" data-i18n="navGames">Games</a>
+        <a href="reviews.html" data-i18n="navReviews">Reviews</a>
+        <a href="about.html" class="active" data-i18n="navAbout">About</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+      <div class="top-actions">
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="pill-btn active" data-lang="en">EN</button>
+          <button class="pill-btn" data-lang="ta">TA</button>
+        </div>
+        <div class="socials" aria-label="Social links">
+          <a href="https://www.instagram.com/eccentric_studios56/" target="_blank" rel="noreferrer"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="http://www.youtube.com/@EccentricStudios-h7d" target="_blank" rel="noreferrer"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero-card">
+        <div>
+          <p class="pill-btn" style="display:inline-flex; margin-bottom:12px;" data-i18n="aboutBadge">About Us</p>
+          <h1 id="aboutProfileName" data-admin="heroTitle" data-i18n="aboutTitle">Eccentric Studios crafts bold brand stories with cinematic polish.</h1>
+          <p data-admin="heroText" data-i18n="aboutText">We blend strategy, motion, and visual direction to create premium experiences that stand out and convert.</p>
+        </div>
+        <div class="hero-side">
+          <img data-admin="heroImage" src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80" alt="Studio about showcase" />
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <article class="glass-card card">
+          <h2 data-i18n="missionTitle">Mission</h2>
+          <p data-admin="missionText" data-i18n="missionText">Craft campaigns that feel fresh, strategic, and unforgettable.</p>
+        </article>
+        <article class="glass-card card">
+          <h2 data-i18n="visionTitle">Vision</h2>
+          <p data-admin="visionText" data-i18n="visionText">Elevate every launch with cinematic storytelling and precise execution.</p>
+        </article>
+      </section>
+
+      <section class="content-grid" style="margin-top:24px;">
+        <article class="glass-card card">
+          <h2>Contact Info</h2>
+          <div id="aboutContacts"></div>
+        </article>
+        <article class="glass-card card">
+          <h2>About</h2>
+          <p data-admin="aboutText">Eccentric Studios is a premium creative agency blending strategy, design, and motion to translate ideas into high-impact brand stories.</p>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal" id="adminModal" role="dialog" aria-modal="true" aria-label="Admin panel">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h2 style="margin:0;">Admin Control Center</h2>
+          <p style="margin:6px 0 0; color:var(--muted);">Update key content and links securely.</p>
+        </div>
+        <button class="ghost-btn" id="closeAdmin">Close</button>
+      </div>
+      <div class="field"><label>Hero heading</label><input id="adminHeroTitle" /></div>
+      <div class="field"><label>Hero description</label><textarea id="adminHeroText"></textarea></div>
+      <div class="field"><label>Hero image URL</label><input id="adminHeroImage" /></div>
+      <div class="field"><label>Mission text</label><textarea id="adminMissionText"></textarea></div>
+      <div class="field"><label>Vision text</label><textarea id="adminVisionText"></textarea></div>
+      <div class="field"><label>Instagram link</label><input id="adminInstagram" /></div>
+      <div class="field"><label>Facebook link</label><input id="adminFacebook" /></div>
+      <div class="field"><label>YouTube link</label><input id="adminYoutube" /></div>
+      <div class="admin-actions">
+        <button class="ghost-btn" id="closeAdmin2">Cancel</button>
+        <button class="primary-btn" id="saveAdmin">Save Changes</button>
+      </div>
+    </div>
+  </div>
+  <script src="scripts/language.js"></script>
+  <script src="scripts/site-content.js"></script>
+  <footer>
+    <div class="container">
+      <span data-i18n="footerCopy">© 2026 Eccentric Studios</span>
+      <span>+91 95660 09292 • Chennai, India</span>
+    </div>
+  </footer>
+</body>
+</html>

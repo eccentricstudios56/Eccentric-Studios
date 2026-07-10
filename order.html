@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order | Eccentric Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <a class="brand" href="first.html" aria-label="Eccentric Studios home">
+        <img class="brand-logo" src="running images/WhatsApp Image 2026-06-28 at 8.22.03 PM.jpeg" alt="Eccentric Studios logo" />
+      </a>
+      <nav>
+        <a href="first.html" data-i18n="navHome">Home</a>
+        <a href="order.html" class="active" data-i18n="navOrder">Order</a>
+        <a href="running images/games.html" data-i18n="navGames">Games</a>
+        <a href="reviews.html" data-i18n="navReviews">Reviews</a>
+        <a href="about.html" data-i18n="navAbout">About</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+      <div class="top-actions">
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="pill-btn active" data-lang="en">EN</button>
+          <button class="pill-btn" data-lang="ta">TA</button>
+        </div>
+        <div class="socials" aria-label="Social links">
+          <a href="https://www.instagram.com/eccentric_studios56/" target="_blank" rel="noreferrer"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="http://www.youtube.com/@EccentricStudios-h7d" target="_blank" rel="noreferrer"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero-card">
+        <div>
+          <p class="pill-btn" style="display:inline-flex; margin-bottom:12px;" data-i18n="orderBadge">Order Placement</p>
+          <h1 data-admin="heroTitle" data-i18n="orderTitle">Bring your next campaign to life with a premium creative brief.</h1>
+          <p data-admin="heroText" data-i18n="orderText">Share your project details and we will prepare a striking, conversion-ready experience for your brand.</p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="https://wa.me/9566009292" target="_blank" rel="noreferrer" data-i18n="waCta">Open WhatsApp</a>
+            <a class="ghost-btn" href="mailto:info@eccentricstudios.in" data-i18n="emailCta">Email Us</a>
+          </div>
+        </div>
+        <div class="hero-side">
+          <img data-admin="heroImage" src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=900&q=80" alt="Creative order planning" />
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <article class="glass-card card form-card">
+          <h2 data-admin="formTitle" data-i18n="formTitle">Order Form</h2>
+          <form>
+            <div class="field"><label data-i18n="formName">Full Name</label><input placeholder="Your name" /></div>
+            <div class="field"><label data-i18n="formCompany">Business or Company Name</label><input placeholder="Company name" /></div>
+            <div class="field"><label data-i18n="formPhone">Phone Number</label><input placeholder="Max 12 digits" maxlength="12" /></div>
+            <div class="field"><label data-i18n="formEmail">Address</label><input type="email" placeholder="you@example.com" /></div>
+            <div class="field"><label data-i18n="formService">Required Service</label><select>
+              <option data-i18n="servicePlaceholder">Select a service</option>
+              <option data-i18n="serviceLogo">Logo & Brand Identity</option>
+              <option data-i18n="serviceWebsite">Website Development</option>
+              <option data-i18n="serviceGraphic">Graphic Design</option>
+              <option data-i18n="serviceSocial">Social Media Management</option>
+              <option data-i18n="serviceVideo">Video Editing</option>
+              <option data-i18n="serviceAi">AI Content Creation</option>
+              <option data-i18n="serviceSeo">SEO & Digital Marketing</option>
+              <option data-i18n="serviceAds">Google & Meta Ads</option>
+              <option data-i18n="serviceEcommerce">E-commerce Solutions</option>
+              <option data-i18n="serviceMaintenance">Website Maintenance</option>
+            </select></div>
+            <div class="field"><label data-i18n="formDescription">Project Description</label><textarea placeholder="Tell us about your vision"></textarea></div>
+            <button class="primary-btn" type="button" data-i18n="formSubmit">Send Request</button>
+          </form>
+        </article>
+
+        <article class="glass-card card">
+          <h2 data-i18n="nextTitle">What happens next?</h2>
+          <ul>
+            <li data-i18n="nextItem1">Your request is prepared for quick follow-up.</li>
+            <li data-i18n="nextItem2">We review your brief and confirm the best creative direction.</li>
+            <li data-i18n="nextItem3">We deliver polished work with premium visuals and strategy.</li>
+          </ul>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal" id="adminModal" role="dialog" aria-modal="true" aria-label="Admin panel">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h2 style="margin:0;">Admin Control Center</h2>
+          <p style="margin:6px 0 0; color:var(--muted);">Update key content and links securely.</p>
+        </div>
+        <button class="ghost-btn" id="closeAdmin">Close</button>
+      </div>
+      <div class="field">
+        <label>Hero heading</label>
+        <input id="adminHeroTitle" />
+      </div>
+      <div class="field">
+        <label>Hero description</label>
+        <textarea id="adminHeroText"></textarea>
+      </div>
+      <div class="field">
+        <label>Hero image URL</label>
+        <input id="adminHeroImage" />
+      </div>
+      <div class="field">
+        <label>Order form heading</label>
+        <input id="adminFormTitle" />
+      </div>
+      <div class="field">
+        <label>Instagram link</label>
+        <input id="adminInstagram" />
+      </div>
+      <div class="field">
+        <label>Facebook link</label>
+        <input id="adminFacebook" />
+      </div>
+      <div class="field">
+        <label>YouTube link</label>
+        <input id="adminYoutube" />
+      </div>
+      <div class="admin-actions">
+        <button class="ghost-btn" id="closeAdmin2">Cancel</button>
+        <button class="primary-btn" id="saveAdmin">Save Changes</button>
+      </div>
+    </div>
+  </div>
+  <script src="scripts/language.js"></script>
+  <script src="scripts/site-content.js"></script>
+  <footer>
+    <div class="container">
+      <span data-i18n="footerCopy">© 2026 Eccentric Studios</span>
+      <span>+91 95660 09292 • Chennai, India</span>
+    </div>
+  </footer>
+</body>
+</html>

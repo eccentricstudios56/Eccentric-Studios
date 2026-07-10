@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | Eccentric Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .admin-shell { padding: 32px 0 60px; }
+    .password-card { max-width: 620px; margin: 0 auto; padding: 28px; border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05)); border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .hidden { display: none; }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .admin-section { margin-bottom: 16px; }
+    .admin-section h3 { margin: 0 0 12px; color: var(--accent-2); }
+    .admin-section .field { margin-bottom: 10px; }
+    .inline-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .editor-card { border: 1px solid var(--border); border-radius: 16px; padding: 12px; margin-bottom: 10px; background: rgba(255,255,255,0.04); }
+    .editor-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .small-btn { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; }
+    .status { margin-top: 12px; color: var(--muted); }
+    .status.success { color: #bbf7d0; }
+    .status.error { color: #fecaca; }
+    .admin-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px; }
+    @media (max-width: 760px) { .admin-grid, .inline-fields { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <a class="brand" href="first.html" aria-label="Eccentric Studios home">
+        <img class="brand-logo" src="running images/WhatsApp Image 2026-06-28 at 8.22.03 PM.jpeg" alt="Eccentric Studios logo" />
+      </a>
+      <nav>
+        <a href="first.html">Home</a>
+        <a href="order.html">Order</a>
+        <a href="running images/games.html">Games</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="about.html">About</a>
+        <a href="admin.html" class="active">Admin</a>
+      </nav>
+      <div class="top-actions">
+        <div class="socials" aria-label="Social links">
+          <a href="https://www.instagram.com/eccentric_studios56/" target="_blank" rel="noreferrer"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="http://www.youtube.com/@EccentricStudios-h7d" target="_blank" rel="noreferrer"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <div class="container">
+      <section class="hero-card" style="padding: 28px;">
+        <div class="password-card" id="passwordCard">
+          <p class="pill-btn" style="display:inline-flex; margin-bottom:12px;">Admin Access</p>
+          <h1 style="margin-top:0;">Unlock the content manager</h1>
+          <p style="color:var(--muted);">Set or enter a password to unlock the admin panel. The password is only stored in your browser.</p>
+          <div class="field">
+            <label for="adminPassword">Password</label>
+            <input id="adminPassword" type="password" placeholder="Enter password" />
+          </div>
+          <div class="admin-actions" style="justify-content:flex-start;">
+            <button class="primary-btn" type="button" id="unlockAdmin">Unlock</button>
+          </div>
+          <p class="status" id="adminMessage"></p>
+        </div>
+
+        <form id="adminForm" class="hidden">
+          <div class="admin-grid">
+            <div>
+              <div class="admin-section">
+                <h3>Homepage</h3>
+                <div class="field"><label>Hero headline</label><input id="heroTitle" /></div>
+                <div class="field"><label>Hero description</label><textarea id="heroText"></textarea></div>
+                <div class="field"><label>Hero image URL</label><input id="heroImage" /></div>
+                <div class="field"><label>Promo video URL</label><input id="videoUrl" /></div>
+                <div class="field"><label>Promo video text</label><textarea id="videoText"></textarea></div>
+              </div>
+
+              <div class="admin-section">
+                <h3>Home media</h3>
+                <div id="homeImageEditor"></div>
+                <button class="small-btn" type="button" id="addHomeImage">Add image</button>
+                <div id="homeVideoEditor" style="margin-top:12px;"></div>
+                <button class="small-btn" type="button" id="addHomeVideo">Add video</button>
+              </div>
+
+              <div class="admin-section">
+                <h3>Projects</h3>
+                <div id="projectEditor"></div>
+                <button class="small-btn" type="button" id="addProject">Add project</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="admin-section">
+                <h3>Reviews</h3>
+                <div id="reviewEditor"></div>
+                <button class="small-btn" type="button" id="addReview">Add review</button>
+              </div>
+
+              <div class="admin-section">
+                <h3>About page</h3>
+                <div class="field"><label>Studio / person name</label><input id="aboutName" /></div>
+                <div class="field"><label>About text</label><textarea id="aboutText"></textarea></div>
+                <div class="field"><label>Mission text</label><textarea id="missionText"></textarea></div>
+                <div class="field"><label>Vision text</label><textarea id="visionText"></textarea></div>
+                <div id="contactEditor"></div>
+                <button class="small-btn" type="button" id="addContact">Add contact</button>
+              </div>
+
+              <div class="admin-section">
+                <h3>Social & contact</h3>
+                <div class="field"><label>Instagram</label><input id="socialInstagram" /></div>
+                <div class="field"><label>Facebook</label><input id="socialFacebook" /></div>
+                <div class="field"><label>YouTube</label><input id="socialYoutube" /></div>
+                <div class="field"><label>Contact email</label><input id="contactEmail" /></div>
+                <div class="field"><label>Contact phone</label><input id="contactPhone" /></div>
+                <div class="field"><label>Contact location</label><input id="contactLocation" /></div>
+                <div class="field"><label>Order form title</label><input id="formTitle" /></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-actions">
+            <button class="ghost-btn" type="button" id="resetAdmin">Reset</button>
+            <button class="primary-btn" type="button" id="saveAdmin">Save Changes</button>
+          </div>
+          <p class="status" id="saveStatus">Changes are saved for the whole website.</p>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_PASSWORD_KEY = 'eccentric-admin-password';
+    const GLOBAL_KEY = 'eccentric-studios-data';
+
+    function normalize(value) {
+      return value?.trim().toLowerCase().replace(/[^a-z0-9]/g, '') || '';
+    }
+
+    function getDefaultState() {
+      return {
+        language: 'en',
+        heroTitle: 'We make bold ideas feel cinematic, unforgettable, and ready to grow.',
+        heroText: 'Eccentric Studios creates striking visual campaigns, motion content, and curated brand experiences that leave a lasting impression.',
+        heroImage: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=900&q=80',
+        heroStats: ['120+', '4.9/5', '24/7'],
+        homeImages: [{ title: 'Studio workspace', image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80', caption: 'Creative studio setup' }],
+        homeVideos: [{ title: 'Brand reel', url: 'https://www.youtube.com/embed/ScMzIvxBSi4?rel=0' }],
+        projects: [
+          { title: 'Launch Motion Identity', description: 'A sharp rebrand with launch motion and premium social assets.', image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80' },
+          { title: 'Luxury Campaign Reel', description: 'A cinematic campaign designed to blend elegance with conversion.', image: 'https://images.unsplash.com/photo-1499557354967-2b2d8910bcca?auto=format&crop&w=900&q=80' },
+          { title: 'Digital Growth Series', description: 'High-impact visuals and stories for product launches and events.', image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80' }
+        ],
+        reviews: [
+          { name: 'Nisha Rao', rating: '5/5', text: 'The creative strategy and final content were beyond expectations.' },
+          { name: 'Aarav Menon', rating: '5/5', text: 'Cinematic, polished, and incredibly responsive throughout the process.' },
+          { name: 'Deepika S.', rating: '5/5', text: 'Every detail felt premium and aligned with our brand goals.' }
+        ],
+        aboutName: 'Eccentric Studios',
+        aboutContacts: [{ name: 'Nithran', phone: '+91 95660 09292', email: 'info@eccentricstudios.in', instagram: '@eccentric_studios56', youtube: '@EccentricStudios-h7d', facebook: 'Eccentric Studios' }],
+        social: { instagram: 'https://www.instagram.com/eccentric_studios56/', facebook: 'https://www.facebook.com/', youtube: 'http://www.youtube.com/@EccentricStudios-h7d' },
+        contact: { email: 'info@eccentricstudios.in', phone: '+91 95660 09292', location: 'Chennai, India' },
+        formTitle: 'Order Form',
+        missionText: 'Craft campaigns that feel fresh, strategic, and unforgettable.',
+        visionText: 'Elevate every launch with cinematic storytelling and precise execution.',
+        aboutText: 'Eccentric Studios is a premium creative agency blending strategy, design, and motion to translate ideas into high-impact brand stories.',
+        videoUrl: 'https://www.youtube.com/embed/ScMzIvxBSi4?rel=0',
+        videoText: 'From launch reels to brand system design, every project is tuned for visual impact and measurable growth.'
+      };
+    }
+
+    function loadState() {
+      const defaults = getDefaultState();
+      const existing = JSON.parse(localStorage.getItem(GLOBAL_KEY) || '{}');
+      return {
+        ...defaults,
+        ...existing,
+        social: { ...defaults.social, ...(existing.social || {}) },
+        contact: { ...defaults.contact, ...(existing.contact || {}) },
+        projects: Array.isArray(existing.projects) ? existing.projects : defaults.projects,
+        reviews: Array.isArray(existing.reviews) ? existing.reviews : defaults.reviews,
+        homeImages: Array.isArray(existing.homeImages) ? existing.homeImages : defaults.homeImages,
+        homeVideos: Array.isArray(existing.homeVideos) ? existing.homeVideos : defaults.homeVideos,
+        aboutContacts: Array.isArray(existing.aboutContacts) ? existing.aboutContacts : defaults.aboutContacts
+      };
+    }
+
+    function createField(label, key, value, multiline) {
+      const wrap = document.createElement('div');
+      wrap.className = 'field';
+      const labelEl = document.createElement('label');
+      labelEl.textContent = label;
+      wrap.appendChild(labelEl);
+      const el = multiline ? document.createElement('textarea') : document.createElement('input');
+      el.setAttribute('data-field', key);
+      if (!multiline) el.type = 'text';
+      el.value = value || '';
+      wrap.appendChild(el);
+      return wrap;
+    }
+
+    function createEditorCard(title, fields, onDelete) {
+      const card = document.createElement('div');
+      card.className = 'editor-card';
+      const header = document.createElement('div');
+      header.className = 'editor-head';
+      const strong = document.createElement('strong');
+      strong.textContent = title;
+      header.appendChild(strong);
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'small-btn';
+      deleteBtn.type = 'button';
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.addEventListener('click', onDelete);
+      header.appendChild(deleteBtn);
+      card.appendChild(header);
+      fields.forEach((field) => card.appendChild(field));
+      return card;
+    }
+
+    function renderArrayEditor(containerId, items, config) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      items.forEach((item, index) => {
+        const card = createEditorCard(`${config.titlePrefix} ${index + 1}`, config.fields.map((field) => createField(field.label, field.key, item[field.key], field.multiline)), () => {
+          items.splice(index, 1);
+          renderArrayEditor(containerId, items, config);
+        });
+        container.appendChild(card);
+      });
+    }
+
+    function populateForm(state) {
+      document.getElementById('heroTitle').value = state.heroTitle || '';
+      document.getElementById('heroText').value = state.heroText || '';
+      document.getElementById('heroImage').value = state.heroImage || '';
+      document.getElementById('videoUrl').value = state.videoUrl || '';
+      document.getElementById('videoText').value = state.videoText || '';
+      document.getElementById('aboutName').value = state.aboutName || '';
+      document.getElementById('aboutText').value = state.aboutText || '';
+      document.getElementById('missionText').value = state.missionText || '';
+      document.getElementById('visionText').value = state.visionText || '';
+      document.getElementById('formTitle').value = state.formTitle || '';
+      document.getElementById('socialInstagram').value = state.social?.instagram || '';
+      document.getElementById('socialFacebook').value = state.social?.facebook || '';
+      document.getElementById('socialYoutube').value = state.social?.youtube || '';
+      document.getElementById('contactEmail').value = state.contact?.email || '';
+      document.getElementById('contactPhone').value = state.contact?.phone || '';
+      document.getElementById('contactLocation').value = state.contact?.location || '';
+      renderArrayEditor('homeImageEditor', state.homeImages || [], { titlePrefix: 'Image', fields: [{ label: 'Title', key: 'title' }, { label: 'Image URL', key: 'image' }, { label: 'Caption', key: 'caption' }] });
+      renderArrayEditor('homeVideoEditor', state.homeVideos || [], { titlePrefix: 'Video', fields: [{ label: 'Title', key: 'title' }, { label: 'YouTube embed URL', key: 'url' }] });
+      renderArrayEditor('projectEditor', state.projects || [], { titlePrefix: 'Project', fields: [{ label: 'Title', key: 'title' }, { label: 'Image URL', key: 'image' }, { label: 'Description', key: 'description', multiline: true }] });
+      renderArrayEditor('reviewEditor', state.reviews || [], { titlePrefix: 'Review', fields: [{ label: 'Name', key: 'name' }, { label: 'Rating', key: 'rating' }, { label: 'Text', key: 'text', multiline: true }] });
+      renderArrayEditor('contactEditor', state.aboutContacts || [], { titlePrefix: 'Contact', fields: [{ label: 'Name', key: 'name' }, { label: 'Phone', key: 'phone' }, { label: 'Email', key: 'email' }, { label: 'Instagram', key: 'instagram' }, { label: 'YouTube', key: 'youtube' }, { label: 'Facebook', key: 'facebook' }] });
+    }
+
+    function collectArrayData(containerId) {
+      const cards = Array.from(document.querySelectorAll(`#${containerId} .editor-card`));
+      return cards.map((card) => {
+        const entry = {};
+        card.querySelectorAll('[data-field]').forEach((field) => {
+          entry[field.getAttribute('data-field')] = field.value;
+        });
+        return entry;
+      }).filter((entry) => Object.values(entry).some(Boolean));
+    }
+
+    function getFormState() {
+      const state = loadState();
+      return {
+        ...state,
+        heroTitle: document.getElementById('heroTitle').value,
+        heroText: document.getElementById('heroText').value,
+        heroImage: document.getElementById('heroImage').value,
+        videoUrl: document.getElementById('videoUrl').value,
+        videoText: document.getElementById('videoText').value,
+        aboutName: document.getElementById('aboutName').value,
+        aboutText: document.getElementById('aboutText').value,
+        missionText: document.getElementById('missionText').value,
+        visionText: document.getElementById('visionText').value,
+        formTitle: document.getElementById('formTitle').value,
+        social: { instagram: document.getElementById('socialInstagram').value, facebook: document.getElementById('socialFacebook').value, youtube: document.getElementById('socialYoutube').value },
+        contact: { email: document.getElementById('contactEmail').value, phone: document.getElementById('contactPhone').value, location: document.getElementById('contactLocation').value },
+        homeImages: collectArrayData('homeImageEditor'),
+        homeVideos: collectArrayData('homeVideoEditor'),
+        projects: collectArrayData('projectEditor'),
+        reviews: collectArrayData('reviewEditor'),
+        aboutContacts: collectArrayData('contactEditor')
+      };
+    }
+
+    function saveState(state) {
+      localStorage.setItem(GLOBAL_KEY, JSON.stringify(state));
+    }
+
+    function showForm() {
+      document.getElementById('passwordCard').classList.add('hidden');
+      document.getElementById('adminForm').classList.remove('hidden');
+    }
+
+    function setStatus(message, type) {
+      const el = document.getElementById('adminMessage');
+      el.textContent = message;
+      el.className = `status ${type || ''}`.trim();
+    }
+
+    function unlockAdmin() {
+      const entered = document.getElementById('adminPassword').value;
+      const normalized = normalize(entered);
+      const stored = localStorage.getItem(STORAGE_PASSWORD_KEY);
+      const isAuthorized = stored ? normalized && normalize(stored) === normalized : Boolean(normalized);
+
+      if (!stored) {
+        if (!entered.trim()) {
+          setStatus('Please choose a password to continue.', 'error');
+          return;
+        }
+        localStorage.setItem(STORAGE_PASSWORD_KEY, entered);
+        showForm();
+        populateForm(loadState());
+        setStatus('Password set and access granted.', 'success');
+      } else if (isAuthorized) {
+        showForm();
+        populateForm(loadState());
+        setStatus('Access granted. You can now update the website.', 'success');
+      } else {
+        setStatus('Incorrect password. Please try again.', 'error');
+      }
+    }
+
+    function addItem(containerId, itemTemplate) {
+      const container = document.getElementById(containerId);
+      const card = document.createElement('div');
+      card.className = 'editor-card';
+      card.innerHTML = itemTemplate;
+      container.appendChild(card);
+    }
+
+    document.getElementById('unlockAdmin').addEventListener('click', unlockAdmin);
+    document.getElementById('adminPassword').addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        unlockAdmin();
+      }
+    });
+
+    document.getElementById('addHomeImage').addEventListener('click', () => {
+      addItem('homeImageEditor', '<div class="field"><label>Title</label><input data-field="title" /></div><div class="field"><label>Image URL</label><input data-field="image" /></div><div class="field"><label>Caption</label><input data-field="caption" /></div>');
+    });
+    document.getElementById('addHomeVideo').addEventListener('click', () => {
+      addItem('homeVideoEditor', '<div class="field"><label>Title</label><input data-field="title" /></div><div class="field"><label>YouTube embed URL</label><input data-field="url" /></div>');
+    });
+    document.getElementById('addProject').addEventListener('click', () => {
+      addItem('projectEditor', '<div class="field"><label>Title</label><input data-field="title" /></div><div class="field"><label>Image URL</label><input data-field="image" /></div><div class="field"><label>Description</label><textarea data-field="description"></textarea></div>');
+    });
+    document.getElementById('addReview').addEventListener('click', () => {
+      addItem('reviewEditor', '<div class="inline-fields"><div class="field"><label>Name</label><input data-field="name" /></div><div class="field"><label>Rating</label><input data-field="rating" /></div></div><div class="field"><label>Text</label><textarea data-field="text"></textarea></div>');
+    });
+    document.getElementById('addContact').addEventListener('click', () => {
+      addItem('contactEditor', '<div class="field"><label>Name</label><input data-field="name" /></div><div class="field"><label>Phone</label><input data-field="phone" /></div><div class="field"><label>Email</label><input data-field="email" /></div><div class="field"><label>Instagram</label><input data-field="instagram" /></div><div class="field"><label>YouTube</label><input data-field="youtube" /></div><div class="field"><label>Facebook</label><input data-field="facebook" /></div>');
+    });
+
+    document.getElementById('saveAdmin').addEventListener('click', () => {
+      const state = getFormState();
+      saveState(state);
+      document.getElementById('saveStatus').textContent = 'Saved successfully. Refresh any page to see the changes.';
+      document.getElementById('saveStatus').className = 'status success';
+    });
+
+    document.getElementById('resetAdmin').addEventListener('click', () => {
+      const defaults = getDefaultState();
+      populateForm(defaults);
+      document.getElementById('saveStatus').textContent = 'Form reset to defaults.';
+      document.getElementById('saveStatus').className = 'status';
+    });
+
+    populateForm(loadState());
+  </script>
+</body>
+</html>

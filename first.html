@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Eccentric Studios offers premium advertising, branding, and creative production with a bold digital presence." />
+  <title>Eccentric Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #040404;
+      --panel: rgba(255,255,255,0.08);
+      --panel-strong: rgba(255,255,255,0.15);
+      --text: #f5f7fb;
+      --muted: #a9b0c3;
+      --accent: #8b5cf6;
+      --accent-2: #06b6d4;
+      --accent-3: #f59e0b;
+      --border: rgba(255,255,255,0.16);
+      --shadow: 0 20px 45px rgba(0,0,0,0.35);
+      --radius: 24px;
+      --max: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(6,182,212,0.18), transparent 28%),
+        radial-gradient(circle at right, rgba(139,92,246,0.2), transparent 32%),
+        var(--bg);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img, iframe { max-width: 100%; display: block; }
+    button, input, select, textarea { font: inherit; }
+
+    .bg-glow {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, transparent 10%, rgba(255,255,255,0.03) 50%, transparent 90%);
+      mix-blend-mode: screen;
+      animation: drift 10s linear infinite;
+    }
+
+    @keyframes drift {
+      from { transform: translateX(-10%); }
+      to { transform: translateX(10%); }
+    }
+
+    .container { width: min(var(--max), calc(100% - 32px)); margin: 0 auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(20px);
+      background: rgba(2,2,2,0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .topbar .container {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: 0.04em; }
+    .brand-logo {
+      height: 46px; width: auto; max-width: 140px; object-fit: contain;
+      border-radius: 16px; padding: 4px 6px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 10px 24px rgba(0,0,0,0.22);
+      backdrop-filter: blur(10px);
+    }
+    .brand-mark {
+      width: 48px; height: 48px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid; place-items: center; position: relative; box-shadow: var(--shadow);
+    }
+    .brand-mark::before, .brand-mark::after {
+      content: ''; position: absolute; inset: 8px; border: 1px solid rgba(255,255,255,0.75); border-radius: 12px;
+    }
+    .brand-mark::after { inset: 14px; border-color: rgba(255,255,255,0.5); }
+    .brand span { display: block; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.2em; }
+    .brand strong { font-size: 1rem; color: var(--text); }
+
+    nav { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    nav a {
+      padding: 8px 12px; border-radius: 999px; color: var(--muted); transition: 0.25s ease;
+    }
+    nav a:hover, nav a.active { color: var(--text); background: rgba(255,255,255,0.08); }
+
+    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .pill-btn, .ghost-btn, .primary-btn {
+      border: none; cursor: pointer; transition: 0.25s ease; border-radius: 999px; padding: 10px 16px; font-weight: 600;
+    }
+    .pill-btn { background: rgba(255,255,255,0.08); color: var(--text); }
+    .ghost-btn { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .primary-btn {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: white; box-shadow: var(--shadow);
+    }
+    .primary-btn:hover, .pill-btn:hover, .ghost-btn:hover { transform: translateY(-2px); }
+
+    .socials { display: flex; gap: 10px; }
+    .socials a {
+      width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border);
+    }
+
+    section { padding: 90px 0; position: relative; }
+    .hero { padding-top: 70px; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 36px; }
+    .hero-copy h1 { font-size: clamp(2.1rem, 4vw, 4rem); line-height: 1.05; margin: 0 0 16px; }
+    .hero-copy p { font-size: 1.04rem; color: var(--muted); max-width: 620px; margin-bottom: 24px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 28px; }
+    .hero-stats { display: flex; gap: 18px; flex-wrap: wrap; }
+    .hero-stats .stat { background: var(--panel); border: 1px solid var(--border); padding: 12px 16px; border-radius: 16px; min-width: 140px; }
+    .hero-stats strong { display: block; font-size: 1.1rem; }
+    .hero-card {
+      position: relative; min-height: 520px; border-radius: 32px; overflow: hidden; background: rgba(255,255,255,0.08); border: 1px solid var(--border); box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+    .hero-card img { width: 100%; height: 100%; object-fit: cover; }
+    .floating-card {
+      position: absolute; background: rgba(0,0,0,0.62); border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(18px); padding: 16px 18px; border-radius: 18px; animation: bob 3.5s ease-in-out infinite; }
+    .floating-card.one { left: 20px; top: 24px; }
+    .floating-card.two { right: 18px; bottom: 24px; animation-delay: 0.6s; }
+    @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+    .section-heading h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); margin: 0; }
+    .section-heading p { color: var(--muted); margin: 0; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; }
+    .glass-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05)); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); backdrop-filter: blur(18px);
+    }
+    .project-card { overflow: hidden; padding: 0; }
+    .project-card img { width: 100%; height: 220px; object-fit: cover; transition: 0.35s ease; }
+    .project-card:hover img { transform: scale(1.06); }
+    .project-card .content { padding: 18px 20px 22px; }
+    .project-card .content h3 { margin: 0 0 8px; font-size: 1.1rem; }
+    .project-card .content p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    .video-card { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; }
+    .video-frame { border-radius: 24px; overflow: hidden; min-height: 330px; background: #000; }
+    .video-frame iframe { width: 100%; height: 330px; border: 0; }
+    .chip-list { display: flex; gap: 10px; flex-wrap: wrap; padding: 0; margin: 18px 0 0; list-style: none; }
+    .chip-list li { background: rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 999px; color: var(--muted); font-size: 0.95rem; }
+
+    .review-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+    .review-card .stars { color: var(--accent-3); margin-bottom: 8px; }
+    .review-card .name { font-weight: 700; margin-bottom: 4px; }
+    .review-card .role { color: var(--muted); font-size: 0.95rem; }
+
+    .order-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 24px; align-items: start; }
+    form { display: grid; gap: 14px; }
+    .field { display: grid; gap: 6px; } 
+    label { font-size: 0.95rem; color: var(--muted); }
+    input, select, textarea {
+      width: 100%; border: 1px solid var(--border); background: rgba(255,255,255,0.06); color: var(--text); padding: 13px 14px; border-radius: 14px; outline: none;
+    }
+    select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--accent-2) 50%), linear-gradient(135deg, var(--accent-2) 50%, transparent 50%);
+      background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px);
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 42px;
+    }
+    select option {
+      background: #0d0d0d;
+      color: var(--text);
+      padding: 10px;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent-2); box-shadow: 0 0 0 2px rgba(6,182,212,0.2); }
+    .form-note { color: var(--muted); font-size: 0.95rem; }
+    .success-msg { margin-top: 12px; display: none; color: #bbf7d0; background: rgba(22,101,52,0.22); padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(74,222,128,0.3); }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .icon-list { display: grid; gap: 10px; margin-top: 16px; }
+    .icon-list .item { display: flex; gap: 10px; align-items: center; color: var(--muted); }
+    .icon-list i { color: var(--accent-2); }
+
+    footer { padding: 24px 0 42px; color: var(--muted); }
+    footer .container { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+    .admin-fab {
+      position: fixed; right: 18px; bottom: 18px; z-index: 30; width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; box-shadow: var(--shadow); font-size: 1.2rem;
+    }
+    .modal {
+      position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(2,2,2,0.74); backdrop-filter: blur(14px); z-index: 40;
+    }
+    .modal.open { display: flex; }
+    .modal-card {
+      width: min(980px, 100%); max-height: 92vh; overflow: auto; background: #080808; border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow); padding: 24px;
+    }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .admin-section { margin-bottom: 16px; }
+    .admin-section h3 { margin: 0 0 12px; color: var(--accent-2); }
+    .admin-section .field { margin-bottom: 10px; }
+    .inline-fields { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .admin-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px; }
+
+    .lang-switch { display: flex; gap: 8px; }
+    .lang-switch button.active { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: white; }
+
+    @media (max-width: 920px) {
+      .hero-grid, .video-card, .order-grid, .about-grid { grid-template-columns: 1fr; }
+      .hero-card { min-height: 420px; }
+      .card-grid, .review-grid { grid-template-columns: 1fr 1fr; }
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .topbar .container { flex-wrap: wrap; }
+      nav { order: 3; width: 100%; justify-content: center; }
+      .card-grid, .review-grid { grid-template-columns: 1fr; }
+      .inline-fields { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; }
+      .hero-stats { flex-direction: column; }
+      .top-actions { width: 100%; justify-content: space-between; }
+      .section-heading { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <header class="topbar">
+    <div class="container">
+      <a class="brand" href="#home" aria-label="Eccentric Studios home">
+        <div class="brand-mark"></div>
+        <div>
+          <span data-i18n="brandSub">Creative Studio</span>
+          <strong data-i18n="brandMain">Eccentric Studios</strong>
+        </div>
+      </a>
+      <nav>
+        <a href="first.html" class="active" data-i18n="navHome">Home</a>
+        <a href="order.html" data-i18n="navOrder">Order</a>
+        <a href="running images/games.html" data-i18n="navGames">Games</a>
+        <a href="reviews.html" data-i18n="navReviews">Reviews</a>
+        <a href="about.html" data-i18n="navAbout">About</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+      <div class="top-actions">
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="pill-btn active" data-lang="en">EN</button>
+          <button class="pill-btn" data-lang="ta">TA</button>
+        </div>
+        <div class="socials" aria-label="Social links">
+          <a id="social-instagram" href="#" target="_blank" rel="noreferrer"><i class="fa-brands fa-instagram"></i></a>
+          <a id="social-facebook" href="#" target="_blank" rel="noreferrer"><i class="fa-brands fa-facebook-f"></i></a>
+          <a id="social-youtube" href="#" target="_blank" rel="noreferrer"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="pill-btn" style="display:inline-flex; margin-bottom:12px;" data-i18n="tagline">Premium Creative & Advertising Studio</p>
+          <h1 data-i18n="heroTitle">We make bold ideas feel cinematic, unforgettable, and ready to grow.</h1>
+          <p id="heroDescription" data-i18n="heroText">Eccentric Studios creates striking visual campaigns, motion content, and curated brand experiences that leave a lasting impression.</p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="order.html" data-i18n="ctaOrder">Place Your Order</a>
+            <a class="ghost-btn" href="reviews.html" data-i18n="ctaView">Explore Reviews</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat"><strong id="heroStat1">120+</strong><span data-i18n="stat1">Projects Delivered</span></div>
+            <div class="stat"><strong id="heroStat2">4.9/5</strong><span data-i18n="stat2">Client Satisfaction</span></div>
+            <div class="stat"><strong id="heroStat3">24/7</strong><span data-i18n="stat3">Creative Support</span></div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <img id="heroImage" src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=900&q=80" alt="Creative studio workspace" />
+          <div class="floating-card one">
+            <strong data-i18n="miniCard1Title">Visual Strategy</strong><br />
+            <span data-i18n="miniCard1Text">Brand-forward content that commands attention.</span>
+          </div>
+          <div class="floating-card two">
+            <strong data-i18n="miniCard2Title">Fast Delivery</strong><br />
+            <span data-i18n="miniCard2Text">Premium production with agile execution.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="glass-card" style="padding:24px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
+          <div>
+            <p class="pill-btn" style="display:inline-flex; margin-bottom:10px;">Games</p>
+            <h2 style="margin:0 0 6px;">Interactive experiences for fun, play, and brand engagement</h2>
+            <p style="margin:0; color:var(--muted);">Discover light, playful digital moments built to delight and connect.</p>
+          </div>
+          <a class="primary-btn" href="running images/games.html">Explore Games</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="portfolio">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <h2 data-i18n="portfolioTitle">Featured Portfolio</h2>
+            <p data-i18n="portfolioText">A curated look at campaigns, content, and visual storytelling.</p>
+          </div>
+          <a class="ghost-btn" href="order.html" data-i18n="portfolioAction">Start Your Project</a>
+        </div>
+        <div class="card-grid" id="portfolioGrid"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container video-card">
+        <div class="video-frame">
+          <iframe id="promoVideo" src="https://www.youtube.com/embed/ScMzIvxBSi4?rel=0" title="Promotional reel" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="glass-card">
+          <h3 data-i18n="videoTitle">Immersive campaign concepts with cinematic polish</h3>
+          <p id="videoDescription" data-i18n="videoText">From launch reels to brand system design, every project is tuned for visual impact and measurable growth.</p>
+          <ul class="chip-list">
+            <li data-i18n="chip1">Brand Films</li>
+            <li data-i18n="chip2">Social Campaigns</li>
+            <li data-i18n="chip3">Motion Graphics</li>
+            <li data-i18n="chip4">Creative Direction</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <span data-i18n="footerCopy">© 2026 Eccentric Studios. Crafted for bold brands.</span>
+      <div class="socials" aria-label="Social links footer">
+        <a id="footerInstagram" href="#" target="_blank" rel="noreferrer"><i class="fa-brands fa-instagram"></i></a>
+        <a id="footerFacebook" href="#" target="_blank" rel="noreferrer"><i class="fa-brands fa-facebook-f"></i></a>
+        <a id="footerYoutube" href="#" target="_blank" rel="noreferrer"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal" id="adminModal" role="dialog" aria-modal="true" aria-label="Admin panel">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h2 style="margin:0;">Admin Control Center</h2>
+          <p style="margin:6px 0 0; color:var(--muted);">Secure editing for content, media, and links.</p>
+        </div>
+        <button class="ghost-btn" id="closeAdmin">Close</button>
+      </div>
+      <div class="admin-grid">
+        <div>
+          <div class="admin-section">
+            <h3>Homepage</h3>
+            <div class="field">
+              <label>Hero headline</label>
+              <input id="adminHeroTitle" />
+            </div>
+            <div class="field">
+              <label>Hero description</label>
+              <textarea id="adminHeroText"></textarea>
+            </div>
+            <div class="field">
+              <label>Hero image URL</label>
+              <input id="adminHeroImage" />
+            </div>
+            <div class="field">
+              <label>Upload hero image</label>
+              <input type="file" id="adminHeroFile" accept="image/*" />
+            </div>
+          </div>
+          <div class="admin-section">
+            <h3>Portfolio</h3>
+            <div class="inline-fields">
+              <div class="field"><label>Project 1 title</label><input id="adminProject1Title" /></div>
+              <div class="field"><label>Project 1 image URL</label><input id="adminProject1Image" /></div>
+            </div>
+            <div class="field"><label>Project 1 description</label><textarea id="adminProject1Text"></textarea></div>
+            <div class="field"><label>Upload project 1 image</label><input type="file" id="adminProject1File" accept="image/*" /></div>
+            <div class="inline-fields">
+              <div class="field"><label>Project 2 title</label><input id="adminProject2Title" /></div>
+              <div class="field"><label>Project 2 image URL</label><input id="adminProject2Image" /></div>
+            </div>
+            <div class="field"><label>Project 2 description</label><textarea id="adminProject2Text"></textarea></div>
+            <div class="field"><label>Upload project 2 image</label><input type="file" id="adminProject2File" accept="image/*" /></div>
+            <div class="inline-fields">
+              <div class="field"><label>Project 3 title</label><input id="adminProject3Title" /></div>
+              <div class="field"><label>Project 3 image URL</label><input id="adminProject3Image" /></div>
+            </div>
+            <div class="field"><label>Project 3 description</label><textarea id="adminProject3Text"></textarea></div>
+            <div class="field"><label>Upload project 3 image</label><input type="file" id="adminProject3File" accept="image/*" /></div>
+          </div>
+        </div>
+        <div>
+          <div class="admin-section">
+            <h3>Reviews & About</h3>
+            <div class="inline-fields">
+              <div class="field"><label>Review 1 name</label><input id="adminReview1Name" /></div>
+              <div class="field"><label>Review 1 rating</label><input id="adminReview1Rating" /></div>
+            </div>
+            <div class="field"><label>Review 1 text</label><textarea id="adminReview1Text"></textarea></div>
+            <div class="inline-fields">
+              <div class="field"><label>Review 2 name</label><input id="adminReview2Name" /></div>
+              <div class="field"><label>Review 2 rating</label><input id="adminReview2Rating" /></div>
+            </div>
+            <div class="field"><label>Review 2 text</label><textarea id="adminReview2Text"></textarea></div>
+            <div class="inline-fields">
+              <div class="field"><label>Review 3 name</label><input id="adminReview3Name" /></div>
+              <div class="field"><label>Review 3 rating</label><input id="adminReview3Rating" /></div>
+            </div>
+            <div class="field"><label>Review 3 text</label><textarea id="adminReview3Text"></textarea></div>
+            <div class="field"><label>About text</label><textarea id="adminAboutText"></textarea></div>
+          </div>
+          <div class="admin-section">
+            <h3>Social & Contact</h3>
+            <div class="field"><label>Instagram</label><input id="adminSocialInstagram" /></div>
+            <div class="field"><label>Facebook</label><input id="adminSocialFacebook" /></div>
+            <div class="field"><label>YouTube</label><input id="adminSocialYoutube" /></div>
+            <div class="field"><label>Contact email</label><input id="adminContactEmail" /></div>
+            <div class="field"><label>Contact phone</label><input id="adminContactPhone" /></div>
+            <div class="field"><label>Contact location</label><input id="adminContactLocation" /></div>
+            <div class="field"><label>Promo video URL</label><input id="adminVideoUrl" /></div>
+            <div class="field"><label>Upload promo video</label><input type="file" id="adminVideoFile" accept="video/*" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="admin-actions">
+        <button class="ghost-btn" id="resetAdmin">Reset</button>
+        <button class="primary-btn" id="saveAdmin">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/site-content.js"></script>
+  <script>
+    const defaultData = {
+      language: 'en',
+      heroTitle: 'We make bold ideas feel cinematic, unforgettable, and ready to grow.',
+      heroText: 'Eccentric Studios creates striking visual campaigns, motion content, and curated brand experiences that leave a lasting impression.',
+      heroImage: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=900&q=80',
+      heroStats: ['120+', '4.9/5', '24/7'],
+      projects: [
+        { title: 'Launch Motion Identity', description: 'A sharp rebrand with launch motion and premium social assets.', image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80' },
+        { title: 'Luxury Campaign Reel', description: 'A cinematic campaign designed to blend elegance with conversion.', image: 'https://images.unsplash.com/photo-1499557354967-2b2d8910bcca?auto=format&fit=crop&w=900&q=80' },
+        { title: 'Digital Growth Series', description: 'High-impact visuals and stories for product launches and events.', image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80' }
+      ],
+      reviews: [
+        { name: 'Nisha Rao', rating: '5/5', text: 'The creative strategy and final content were beyond expectations.' },
+        { name: 'Aarav Menon', rating: '5/5', text: 'Cinematic, polished, and incredibly responsive throughout the process.' },
+        { name: 'Deepika S.', rating: '5/5', text: 'Every detail felt premium and aligned with our brand goals.' }
+      ],
+      social: {
+        instagram: 'https://www.instagram.com/eccentric_studios56/',
+        facebook: 'https://www.facebook.com/',
+        youtube: 'http://www.youtube.com/@EccentricStudios-h7d'
+      },
+      contact: {
+        email: 'info@eccentricstudios.in',
+        phone: '+91 95660 09292',
+        location: 'Chennai, India'
+      },
+      aboutText: 'Eccentric Studios is a premium creative agency blending strategy, design, and motion to translate ideas into high-impact brand stories.',
+      videoUrl: 'https://www.youtube.com/embed/ScMzIvxBSi4?rel=0',
+      videoText: 'From launch reels to brand system design, every project is tuned for visual impact and measurable growth.'
+    };
+
+    const translations = {
+      en: {
+        brandSub: 'Creative Studio',
+        brandMain: 'Eccentric Studios',
+        navHome: 'Home',
+        navOrder: 'Order',
+        navGames: 'Games',
+        navReviews: 'Reviews',
+        navAbout: 'About',
+        tagline: 'Premium Creative & Advertising Studio',
+        heroTitle: 'We make bold ideas feel cinematic, unforgettable, and ready to grow.',
+        heroText: 'Eccentric Studios creates striking visual campaigns, motion content, and curated brand experiences that leave a lasting impression.',
+        ctaOrder: 'Place Your Order',
+        ctaView: 'Explore Reviews',
+        stat1: 'Projects Delivered',
+        stat2: 'Client Satisfaction',
+        stat3: 'Creative Support',
+        miniCard1Title: 'Visual Strategy',
+        miniCard1Text: 'Brand-forward content that commands attention.',
+        miniCard2Title: 'Fast Delivery',
+        miniCard2Text: 'Premium production with agile execution.',
+        portfolioTitle: 'Featured Portfolio',
+        portfolioText: 'A curated look at campaigns, content, and visual storytelling.',
+        portfolioAction: 'Start Your Project',
+        videoTitle: 'Immersive campaign concepts with cinematic polish',
+        videoText: 'From launch reels to brand system design, every project is tuned for visual impact and measurable growth.',
+        chip1: 'Brand Films',
+        chip2: 'Social Campaigns',
+        chip3: 'Motion Graphics',
+        chip4: 'Creative Direction',
+        orderTitle: 'Order Placement',
+        orderText: 'Share your idea and we will shape it into a striking, conversion-ready experience.',
+        contactPhone: '+91 95660 09292',
+        contactLocation: 'Chennai, India',
+        formName: 'Full Name',
+        formCompany: 'Business or Company Name',
+        formPhone: 'Phone Number',
+        formEmail: 'Email Address',
+        formService: 'Required Service',
+        servicePlaceholder: 'Select a service',
+        serviceBrand: 'Brand Identity',
+        serviceCampaign: 'Advertising Campaign',
+        serviceReel: 'Motion Reel',
+        serviceSocial: 'Social Media Pack',
+        formDescription: 'Project Description',
+        formSubmit: 'Send Request',
+        formNote: 'Your request is prepared for WhatsApp and saved locally for quick follow-up.',
+        formSuccess: 'Your request has been prepared successfully. We will contact you shortly.',
+        reviewsTitle: 'Trusted by growing brands',
+        reviewsText: 'A few highlights from clients who chose a sharper digital presence.',
+        aboutTitle: 'About Eccentric Studios',
+        aboutTextBody: 'Eccentric Studios is a premium creative agency blending strategy, design, and motion to translate ideas into high-impact brand stories.',
+        mission: 'Mission: Craft campaigns that feel fresh, strategic, and unforgettable.',
+        vision: 'Vision: Elevate every launch with cinematic storytelling and precision execution.',
+        contactTitle: 'Contact & Social',
+        contactSummary: 'Work with us for brand launches, online presence, social storytelling, and premium creative production.',
+        footerCopy: '© 2026 Eccentric Studios. Crafted for bold brands.'
+      },
+      ta: {
+        brandSub: 'சிரேஷ்ட படைப்புகள்',
+        brandMain: 'எக்கென்ட்ரிக் ஸ்டுடியோஸ்',
+        navHome: 'முகப்பு',
+        navOrder: 'ஆர்டர்',
+        navGames: 'விளையாட்டுகள்',
+        navReviews: 'மதிப்புரைகள்',
+        navAbout: 'எங்களைப் பற்றி',
+        tagline: 'பிரீமியம் கிரியேட்டிவ் & விளம்பர ஸ்டுடியோ',
+        heroTitle: 'துணிச்சலான யோசனைகளை திரைப்படம் போல, மறக்கமுடியாததாகவும், வளர்ச்சிக்கு தயாராகவும் மாற்றுகிறோம்.',
+        heroText: 'எக்கென்ட்ரிக் ஸ்டுடியோஸ் வலுவான காட்சிப் பிரச்சாரங்கள், மோஷன் உள்ளடக்கம் மற்றும் பிராண்டின் அனுபவங்களை உருவாக்குகிறது.',
+        ctaOrder: 'உங்கள் ஆர்டரை பதிவு செய்யவும்',
+        ctaView: 'மதிப்புரைகளைப் பார்க்கவும்',
+        stat1: 'செயல்படுத்தப்பட்ட திட்டங்கள்',
+        stat2: 'வாடிக்கையாளர் திருப்தி',
+        stat3: 'கிரியேட்டிவ் ஆதரவு',
+        miniCard1Title: 'காட்சி உத்தி',
+        miniCard1Text: 'கவனத்தை ஈர்க்கும் பிராண்ட்-மைய உள்ளடக்கம்.',
+        miniCard2Title: 'விரைவான டெலிவரி',
+        miniCard2Text: 'அதிக தரமான உற்பத்தி மற்றும் வேகமான செயல்பாடு.',
+        portfolioTitle: 'சிறப்பு போர்ட்ஃபோலியோ',
+        portfolioText: 'பிரச்சாரங்கள், உள்ளடக்கம் மற்றும் காட்சி கதையாடலின் தேர்ந்தெடுக்கப்பட்ட காட்சி.',
+        portfolioAction: 'உங்கள் திட்டத்தைத் தொடங்குங்கள்',
+        videoTitle: 'சினிமா பாணியில் உருவாக்கப்பட்ட அதிர்வூட்டும் பிரச்சார கருத்துக்கள்',
+        videoText: 'துவக்க ரீல்கள் முதல் பிராண்ட் அமைப்பு வரை, ஒவ்வொரு திட்டமும் தாக்கம் மற்றும் வளர்ச்சிக்காக வடிவமைக்கப்பட்டுள்ளது.',
+        chip1: 'பிராண்ட் ஃபிலிம்ஸ்',
+        chip2: 'சோஷியல் பிரச்சாரங்கள்',
+        chip3: 'மோஷன் கிராபிக்ஸ்',
+        chip4: 'கிரியேட்டிவ் திசைநிலை',
+        orderTitle: 'ஆர்டர் அளித்தல்',
+        orderText: 'உங்கள் யோசனையை பகிரவும்; அதை வலுவான, மாற்றத்தை உருவாக்கும் அனுபவமாக வடிவமைக்கிறோம்.',
+        contactPhone: '+91 95660 09292',
+        contactLocation: 'சென்னை, இந்தியா',
+        formName: 'முழு பெயர்',
+        formCompany: 'வணிகம் அல்லது நிறுவனத்தின் பெயர்',
+        formPhone: 'தொலைபேசி எண்',
+        formEmail: 'மின்னஞ்சல் முகவரி',
+        formService: 'தேவையான சேவை',
+        servicePlaceholder: 'ஒரு சேவையைத் தேர்ந்தெடுக்கவும்',
+        serviceBrand: 'பிராண்ட் அடையாளம்',
+        serviceCampaign: 'விளம்பர பிரச்சாரம்',
+        serviceReel: 'மோஷன் ரீல்',
+        serviceSocial: 'சோஷியல் மீடியா தொகுப்பு',
+        formDescription: 'திட்ட விவரம்',
+        formSubmit: 'கோரிக்கையை அனுப்பவும்',
+        formNote: 'உங்கள் கோரிக்கை WhatsApp-க்காக தயார் செய்யப்படுகிறது மற்றும் விரைவான பின்தொடர்புக்காக உள்ளூர் ரீதியில் சேமிக்கப்படும்.',
+        formSuccess: 'உங்கள் கோரிக்கை வெற்றிகரமாக தயாரிக்கப்பட்டது. விரைவில் உங்களைத் தொடர்புகொள்வோம்.',
+        reviewsTitle: 'வளர்ந்து வரும் பிராண்டுகளால் நம்பப்படுகிறது',
+        reviewsText: 'தெளிவான டிஜிட்டல் இருப்பைத் தேர்ந்தெடுத்த வாடிக்கையாளர்களின் சில கருத்துகள்.',
+        aboutTitle: 'எக்கென்ட்ரிக் ஸ்டுடியோஸைப் பற்றி',
+        aboutTextBody: 'எக்கென்ட்ரிக் ஸ்டுடியோஸ் ஒரு பிரீமியம் கிரியேட்டிவ் ஏஜென்சியாகும், இது உத்தி, வடிவமைப்பு மற்றும் மோஷனை இணைத்து யோசனைகளை வலுவான பிராண்ட் கதைகளாக மாற்றுகிறது.',
+        mission: 'பணிச்சூழல்: புதுமையான, உத்தி சார்ந்த, மறக்க முடியாத பிரச்சாரங்களை உருவாக்குவது.',
+        vision: 'கனவு: ஒவ்வொரு வெளியீட்டையும் சினிமா முறையில் விவரித்து துல்லியமான செயல்பாட்டுடன் உயர்த்துவது.',
+        contactTitle: 'தொடர்பு & சமூக ஊடகங்கள்',
+        contactSummary: 'பிராண்ட் அறிமுகங்கள், ஆன்லைன் இருப்பு, சோஷியல் கதைசொல்லல் மற்றும் பிரீமியம் கிரியேட்டிவ் தயாரிப்புகளுக்கு எங்களுடன் பணியாற்றுங்கள்.',
+        footerCopy: '© 2026 எக்கென்ட்ரிக் ஸ்டுடியோஸ். துணிச்சலான பிராண்டுகளுக்காக வடிவமைக்கப்பட்டது.'
+      }
+    };
+
+    var storageKey = 'eccentric-studios-data';
+    var state = JSON.parse(localStorage.getItem(storageKey)) || defaultData;
+    window.eccentricState = state;
+    window.state = state;
+    window.eccentricStorageKey = storageKey;
+    window.eccentricDefaultData = defaultData;
+    window.eccentricSetState = function(nextState) {
+      state = nextState;
+      window.eccentricState = nextState;
+      window.state = nextState;
+    };
+    window.renderSite = renderSite;
+
+    function applyLanguage(lang) {
+      state.language = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+      document.querySelectorAll('[data-lang]').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    function renderSite() {
+      document.getElementById('heroDescription').textContent = state.heroText;
+      document.querySelector('h1').textContent = state.heroTitle;
+      document.getElementById('heroImage').src = state.heroImage;
+      document.getElementById('heroImage').alt = state.heroTitle;
+      document.getElementById('heroStat1').textContent = state.heroStats[0];
+      document.getElementById('heroStat2').textContent = state.heroStats[1];
+      document.getElementById('heroStat3').textContent = state.heroStats[2];
+      document.getElementById('promoVideo').src = state.videoUrl;
+      document.getElementById('videoDescription').textContent = state.videoText;
+      document.getElementById('aboutText').textContent = state.aboutText;
+      document.getElementById('contactEmail').textContent = state.contact.email;
+      document.getElementById('contactInstagram').textContent = state.social.instagram;
+      document.getElementById('contactFacebook').textContent = state.social.facebook;
+      document.getElementById('contactYoutube').textContent = state.social.youtube;
+      document.getElementById('social-instagram').href = state.social.instagram;
+      document.getElementById('social-facebook').href = state.social.facebook;
+      document.getElementById('social-youtube').href = state.social.youtube;
+      document.getElementById('footerInstagram').href = state.social.instagram;
+      document.getElementById('footerFacebook').href = state.social.facebook;
+      document.getElementById('footerYoutube').href = state.social.youtube;
+      document.querySelector('[data-i18n="contactPhone"]').textContent = state.contact.phone;
+      document.querySelector('[data-i18n="contactLocation"]').textContent = state.contact.location;
+
+      const portfolioGrid = document.getElementById('portfolioGrid');
+      portfolioGrid.innerHTML = '';
+      state.projects.forEach(project => {
+        const card = document.createElement('article');
+        card.className = 'glass-card project-card';
+        card.innerHTML = `
+          <img src="${project.image}" alt="${project.title}" />
+          <div class="content">
+            <h3>${project.title}</h3>
+            <p>${project.description}</p>
+          </div>`;
+        portfolioGrid.appendChild(card);
+      });
+
+      const reviewGrid = document.getElementById('reviewGrid');
+      reviewGrid.innerHTML = '';
+      state.reviews.forEach(review => {
+        const card = document.createElement('article');
+        card.className = 'glass-card review-card';
+        card.innerHTML = `
+          <div class="stars">★★★★★</div>
+          <p>“${review.text}”</p>
+          <div class="name">${review.name}</div>
+          <div class="role">${review.rating}</div>`;
+        reviewGrid.appendChild(card);
+      });
+
+      populateAdminForm();
+      applyLanguage(state.language);
+    }
+
+    function populateAdminForm() {
+      document.getElementById('adminHeroTitle').value = state.heroTitle;
+      document.getElementById('adminHeroText').value = state.heroText;
+      document.getElementById('adminHeroImage').value = state.heroImage;
+      document.getElementById('adminProject1Title').value = state.projects[0].title;
+      document.getElementById('adminProject1Image').value = state.projects[0].image;
+      document.getElementById('adminProject1Text').value = state.projects[0].description;
+      document.getElementById('adminProject2Title').value = state.projects[1].title;
+      document.getElementById('adminProject2Image').value = state.projects[1].image;
+      document.getElementById('adminProject2Text').value = state.projects[1].description;
+      document.getElementById('adminProject3Title').value = state.projects[2].title;
+      document.getElementById('adminProject3Image').value = state.projects[2].image;
+      document.getElementById('adminProject3Text').value = state.projects[2].description;
+      document.getElementById('adminReview1Name').value = state.reviews[0].name;
+      document.getElementById('adminReview1Rating').value = state.reviews[0].rating;
+      document.getElementById('adminReview1Text').value = state.reviews[0].text;
+      document.getElementById('adminReview2Name').value = state.reviews[1].name;
+      document.getElementById('adminReview2Rating').value = state.reviews[1].rating;
+      document.getElementById('adminReview2Text').value = state.reviews[1].text;
+      document.getElementById('adminReview3Name').value = state.reviews[2].name;
+      document.getElementById('adminReview3Rating').value = state.reviews[2].rating;
+      document.getElementById('adminReview3Text').value = state.reviews[2].text;
+      document.getElementById('adminAboutText').value = state.aboutText;
+      document.getElementById('adminSocialInstagram').value = state.social.instagram;
+      document.getElementById('adminSocialFacebook').value = state.social.facebook;
+      document.getElementById('adminSocialYoutube').value = state.social.youtube;
+      document.getElementById('adminContactEmail').value = state.contact.email;
+      document.getElementById('adminContactPhone').value = state.contact.phone;
+      document.getElementById('adminContactLocation').value = state.contact.location;
+      document.getElementById('adminVideoUrl').value = state.videoUrl;
+    }
+
+    document.querySelectorAll('[data-lang]').forEach(btn => {
+      btn.addEventListener('click', () => applyLanguage(btn.getAttribute('data-lang')));
+    });
+
+    document.getElementById('orderForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const form = event.target;
+      const phone = document.getElementById('phone');
+      const digits = phone.value.replace(/\D/g, '').slice(0, 12);
+      phone.value = digits;
+      if (digits.length < 10) {
+        alert('Please enter a valid phone number with at least 10 digits.');
+        phone.focus();
+        return;
+      }
+      const details = Array.from(form.elements)
+        .filter(el => el.name)
+        .map(el => `${el.name}: ${el.value}`)
+        .join('\n');
+      const whatsappUrl = `https://wa.me/919566009292?text=${encodeURIComponent('New order request from Eccentric Studios website:\n\n' + details)}`;
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      document.getElementById('formSuccess').style.display = 'block';
+      form.reset();
+      setTimeout(() => document.getElementById('formSuccess').style.display = 'none', 5000);
+    });
+
+    async function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    renderSite();
+  </script>
+</body>
+</html>

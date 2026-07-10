@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reviews | Eccentric Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <a class="brand" href="first.html" aria-label="Eccentric Studios home">
+        <img class="brand-logo" src="running images/WhatsApp Image 2026-06-28 at 8.22.03 PM.jpeg" alt="Eccentric Studios logo" />
+      </a>
+      <nav>
+        <a href="first.html" data-i18n="navHome">Home</a>
+        <a href="order.html" data-i18n="navOrder">Order</a>
+        <a href="running images/games.html" data-i18n="navGames">Games</a>
+        <a href="reviews.html" class="active" data-i18n="navReviews">Reviews</a>
+        <a href="about.html" data-i18n="navAbout">About</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+      <div class="top-actions">
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="pill-btn active" data-lang="en">EN</button>
+          <button class="pill-btn" data-lang="ta">TA</button>
+        </div>
+        <div class="socials" aria-label="Social links">
+          <a href="https://www.instagram.com/eccentric_studios56/" target="_blank" rel="noreferrer"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="http://www.youtube.com/@EccentricStudios-h7d" target="_blank" rel="noreferrer"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero-card">
+        <div>
+          <p class="pill-btn" style="display:inline-flex; margin-bottom:12px;" data-i18n="reviewBadge">Client Reviews</p>
+          <h1 data-admin="heroTitle" data-i18n="reviewTitle">Trusted by brands that want premium visuals and seamless execution.</h1>
+          <p data-admin="heroText" data-i18n="reviewText">Our clients value strategy, craft, and thoughtful delivery from concept to launch.</p>
+        </div>
+        <div class="hero-side">
+          <img data-admin="heroImage" src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80" alt="Client review showcase" />
+        </div>
+      </section>
+
+      <section class="content-grid" id="reviewList"></section>
+
+      <section class="content-grid" style="margin-top:24px;">
+        <article class="glass-card card">
+          <h2 data-i18n="reviewFormTitle">Leave a review</h2>
+          <form id="reviewForm">
+            <div class="field"><label data-i18n="reviewFormName">Name</label><input id="reviewCustomerName" required /></div>
+            <div class="field"><label data-i18n="reviewFormRating">Rating</label><input id="reviewCustomerRating" data-i18n="reviewFormRatingPlaceholder" data-i18n-attr="placeholder" placeholder="5/5" /></div>
+            <div class="field"><label data-i18n="reviewFormReview">Review</label><textarea id="reviewCustomerText" required></textarea></div>
+            <button class="primary-btn" type="submit" data-i18n="reviewFormSubmit">Submit review</button>
+          </form>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <script src="scripts/language.js"></script>
+  <script src="scripts/site-content.js"></script>
+</body>
+</html>
