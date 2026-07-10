@@ -52,7 +52,7 @@ function getDefaultState() {
     ],
     aboutName: 'Eccentric Studios',
     aboutContacts: [
-      { name: 'Nithran', phone: '+91 95660 09292', email: 'info@eccentricstudios.in', instagram: '@eccentric_studios56', youtube: '@EccentricStudios-h7d', facebook: 'Eccentric Studios' }
+      { name: 'V.Bharani Dharan', phone: '+91 95660 09292', email: 'info@eccentricstudios.in', instagram: '@eccentric_studios56', youtube: '@EccentricStudios-h7d', facebook: 'Eccentric Studios' }
     ],
     social: {
       instagram: 'https://www.instagram.com/eccentric_studios56/',
