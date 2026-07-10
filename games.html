@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arcade Game Hub (Mobile Friendly)</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-color: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #hub {
+            text-align: center;
+            padding: 1.5rem;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover, .card:active {
+            transform: scale(0.98);
+            border-color: var(--accent-color);
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--bg-color);
+            padding: 10px;
+        }
+
+        .screen.active { display: flex; }
+
+        .overlay {
+            background: rgba(15, 23, 42, 0.98);
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .overlay h2 { font-size: 2rem; margin-bottom: 1rem; color: var(--accent-color); }
+        .overlay p { font-size: 1rem; max-width: 500px; margin-bottom: 2rem; line-height: 1.5; }
+
+        button {
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #ef4444;
+            color: white;
+            z-index: 5;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        canvas {
+            background: #000;
+            border-radius: 8px;
+            max-width: 100%;
+            max-height: 50vh;
+            aspect-ratio: 1/1;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        #score-board { font-size: 1.3rem; margin-bottom: 10px; margin-top: 40px; }
+
+        /* Mobile Controller Styles */
+        .mobile-controls {
+            display: none;
+            width: 100%;
+            max-width: 360px;
+            margin-top: 15px;
+        }
+
+        .dpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto;
+        }
+
+        .dpad-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dpad-btn:active { background: var(--accent-color); color: black; }
+
+        .linear-controls {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 20px;
+        }
+        .linear-btn {
+            flex: 1;
+            height: 60px;
+            background: #334155;
+            color: white;
+            font-size: 1.8rem;
+            border: none;
+            border-radius: 8px;
+        }
+        .linear-btn:active { background: var(--accent-color); color: black; }
+
+        /* Game Grids */
+        .ttt-grid { display: grid; grid-template-columns: repeat(3, 80px); gap: 8px; }
+        .ttt-cell {
+            width: 80px; height: 80px; background: var(--card-bg);
+            border: 2px solid var(--accent-color); font-size: 2rem;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+        }
+
+        .memory-grid { display: grid; grid-template-columns: repeat(4, 70px); gap: 8px; }
+        .memory-card {
+            width: 70px; height: 70px; background: var(--accent-color);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: transparent;
+        }
+        .memory-card.flipped { background: var(--card-bg); color: white; }
+    </style>
+</head>
+<body>
+    <a href="../first.html" style="position:absolute; top:15px; left:15px; color:#38bdf8; text-decoration:none; font-weight:bold; z-index:20;">← Back to Studio</a>
+
+    <div id="hub">
+        <h1>Arcade Hub</h1>
+        <div class="grid">
+            <div class="card" onclick="openGame('snake')"><h2>🐍 Snake</h2></div>
+            <div class="card" onclick="openGame('pong')"><h2>🏓 Pong</h2></div>
+            <div class="card" onclick="openGame('ttt')"><h2>❌ Tic-Tac-Toe</h2></div>
+            <div class="card" onclick="openGame('catch')"><h2>🪂 Catch Blocks</h2></div>
+            <div class="card" onclick="openGame('memory')"><h2>🧠 Memory Match</h2></div>
+        </div>
+    </div>
+
+    <div id="rules-overlay" class="overlay" style="display: none;">
+        <h2 id="rules-title">Game Rules</h2>
+        <p id="rules-text">Rules go here...</p>
+        <button onclick="startGame()">Play Game</button>
+    </div>
+
+    <div id="game-container" class="screen">
+        <button class="back-btn" onclick="exitToHub()">Hub</button>
+        <div id="score-board">Score: <span id="score-val">0</span></div>
+        <div id="game-area"></div>
+        
+        <div id="mobile-dpad-tray" class="mobile-controls">
+            <div class="dpad">
+                <div></div><button class="dpad-btn" ontouchstart="triggerKey('ArrowUp')">▲</button><div></div>
+                <button class="dpad-btn" ontouchstart="triggerKey('ArrowLeft')">◀</button><div></div><button class="dpad-btn" ontouchstart="triggerKey('ArrowRight')">▶</button>
+                <div></div><button class="dpad-btn" ontouchstart="triggerKey('ArrowDown')">▼</button><div></div>
+            </div>
+        </div>
+
+        <div id="mobile-linear-tray" class="mobile-controls">
+            <div class="linear-controls">
+                <button id="btn-left" class="linear-btn" ontouchstart="triggerKeyStart('left')" ontouchend="triggerKeyEnd('left')">◀</button>
+                <button id="btn-right" class="linear-btn" ontouchstart="triggerKeyStart('right')" ontouchend="triggerKeyEnd('right')">▶</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentGame = '';
+        let gameInterval = null;
+        let score = 0;
+        let keys = {};
+        const scoreVal = document.getElementById('score-val');
+
+        const gameData = {
+            snake: { title: "Snake Arcade", rules: "Guide the snake using the on-screen arrows or your keyboard. Eat the red squares to grow. Don't hit walls or yourself!" },
+            pong: { title: "Retro Pong", rules: "Control the left paddle. Use ▲/▼ buttons or W/S keys to block the ball. First to score past the computer wins!" },
+            ttt: { title: "Tic-Tac-Toe", rules: "Tap the grid spaces to place your 'X'. Get three in a row horizontally, vertically, or diagonally to win." },
+            catch: { title: "Catch the Blocks", rules: "Move your paddle left and right using the arrow buttons. Catch the falling blocks to score!" },
+            memory: { title: "Memory Match", rules: "Tap cards to flip them. Find matching pairs of emojis to clear the board!" }
+        };
+
+        // Simulated key controller for mobile buttons
+        function triggerKey(keyName) {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: keyName }));
+        }
+        function triggerKeyStart(dir) {
+            if (currentGame === 'catch') keys[dir === 'left' ? 'ArrowLeft' : 'ArrowRight'] = true;
+            if (currentGame === 'pong') keys[dir === 'left' ? 'w' : 's'] = true; // left acts as up, right acts as down
+        }
+        function triggerKeyEnd(dir) {
+            if (currentGame === 'catch') keys[dir === 'left' ? 'ArrowLeft' : 'ArrowRight'] = false;
+            if (currentGame === 'pong') keys[dir === 'left' ? 'w' : 's'] = false;
+        }
+
+        function openGame(gameKey) {
+            currentGame = gameKey;
+            document.getElementById('hub').style.display = 'none';
+            document.getElementById('rules-title').innerText = gameData[gameKey].title;
+            document.getElementById('rules-text').innerText = gameData[gameKey].rules;
+            document.getElementById('rules-overlay').style.display = 'flex';
+        }
+
+        function startGame() {
+            document.getElementById('rules-overlay').style.display = 'none';
+            document.getElementById('game-container').classList.add('active');
+            updateScore(0);
+            keys = {};
+            
+            const area = document.getElementById('game-area');
+            area.innerHTML = ''; 
+
+            // Handle Mobile Layouts
+            document.getElementById('mobile-dpad-tray').style.display = 'none';
+            document.getElementById('mobile-linear-tray').style.display = 'none';
+
+            const isMobile = window.innerWidth <= 768;
+
+            if (['snake', 'pong', 'catch'].includes(currentGame)) {
+                const canvas = document.createElement('canvas');
+                canvas.id = 'gameCanvas';
+                canvas.width = 400; canvas.height = 400;
+                area.appendChild(canvas);
+
+                if (isMobile) {
+                    if (currentGame === 'snake') {
+                        document.getElementById('mobile-dpad-tray').style.display = 'block';
+                    } else if (currentGame === 'catch') {
+                        document.getElementById('btn-left').innerText = '◀';
+                        document.getElementById('btn-right').innerText = '▶';
+                        document.getElementById('mobile-linear-tray').style.display = 'block';
+                    } else if (currentGame === 'pong') {
+                        document.getElementById('btn-left').innerText = '▲';
+                        document.getElementById('btn-right').innerText = '▼';
+                        document.getElementById('mobile-linear-tray').style.display = 'block';
+                    }
+                }
+            }
+
+            if (currentGame === 'snake') initSnake();
+            if (currentGame === 'pong') initPong();
+            if (currentGame === 'ttt') initTTT();
+            if (currentGame === 'catch') initCatch();
+            if (currentGame === 'memory') initMemory();
+        }
+
+        function exitToHub() {
+            clearInterval(gameInterval);
+            document.getElementById('game-container').classList.remove('active');
+            document.getElementById('hub').style.display = 'block';
+            window.onkeydown = null;
+        }
+
+        function updateScore(val) { score = val; scoreVal.innerText = score; }
+
+        // ==================== GAMES ENGINE ====================
+
+        function initSnake() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            let snake = [{x: 200, y: 200}], dx = 20, dy = 0, food = {x: 100, y: 100};
+            
+            window.onkeydown = e => {
+                if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -20; }
+                if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 20; }
+                if (e.key === 'ArrowLeft' && dx === 0) { dx = -20; dy = 0; }
+                if (e.key === 'ArrowRight' && dx === 0) { dx = 20; dy = 0; }
+            };
+
+            gameInterval = setInterval(() => {
+                const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+                if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || snake.some(s => s.x === head.x && s.y === head.y)) {
+                    alert('Game Over! Score: ' + score); return startGame();
+                }
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    updateScore(score + 1);
+                    food = {x: Math.floor(Math.random()*20)*20, y: Math.floor(Math.random()*20)*20};
+                } else { snake.pop(); }
+
+                ctx.fillStyle = '#000'; ctx.fillRect(0,0,400,400);
+                ctx.fillStyle = '#ef4444'; ctx.fillRect(food.x, food.y, 18, 18);
+                ctx.fillStyle = '#10b981'; snake.forEach(s => ctx.fillRect(s.x, s.y, 18, 18));
+            }, 130);
+        }
+
+        function initPong() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            let p1 = 160, p2 = 160, ball = {x:200, y:200, dx:4, dy:4};
+            
+            window.onkeydown = e => keys[e.key.toLowerCase()] = true;
+            window.onkeyup = e => keys[e.key.toLowerCase()] = false;
+
+            gameInterval = setInterval(() => {
+                if ((keys['w'] || keys['arrowup']) && p1 > 0) p1 -= 6;
+                if ((keys['s'] || keys['arrowdown']) && p1 < 320) p1 += 6;
+                
+                if (ball.y > p2 + 40 && p2 < 320) p2 += 3.5;
+                if (ball.y < p2 + 40 && p2 > 0) p2 -= 3.5;
+
+                ball.x += ball.dx; ball.y += ball.dy;
+                if (ball.y <= 0 || ball.y >= 390) ball.dy *= -1;
+
+                if (ball.x <= 20 && ball.y >= p1 && ball.y <= p1 + 80) ball.dx = Math.abs(ball.dx) * 1.05;
+                if (ball.x >= 370 && ball.y >= p2 && ball.y <= p2 + 80) ball.dx = -Math.abs(ball.dx) * 1.05;
+
+                if (ball.x < 0) ball = {x:200, y:200, dx:4, dy:4};
+                if (ball.x > 400) { updateScore(score + 1); ball = {x:200, y:200, dx:-4, dy:4}; }
+
+                ctx.fillStyle = '#000'; ctx.fillRect(0,0,400,400);
+                ctx.fillStyle = '#fff'; ctx.fillRect(10, p1, 10, 80); ctx.fillRect(380, p2, 10, 80); ctx.fillRect(ball.x, ball.y, 10, 10);
+            }, 1000/60);
+        }
+
+        function initTTT() {
+            const area = document.getElementById('game-area');
+            const grid = document.createElement('div');
+            grid.className = 'ttt-grid';
+            let board = Array(9).fill('');
+            
+            for(let i=0; i<9; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'ttt-cell';
+                cell.onclick = () => {
+                    if (board[i] || checkWin(board)) return;
+                    board[i] = 'X'; cell.innerText = 'X';
+                    if (!checkWin(board)) setTimeout(aiMove, 300);
+                };
+                grid.appendChild(cell);
+            }
+            area.appendChild(grid);
+
+            function aiMove() {
+                let empty = board.map((v,i) => v==='' ? i : null).filter(v => v !== null);
+                if (empty.length === 0) return;
+                let move = empty[Math.floor(Math.random() * empty.length)];
+                board[move] = 'O'; grid.children[move].innerText = 'O'; checkWin(board);
+            }
+
+            function checkWin(b) {
+                const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+                for (let w of wins) {
+                    if (b[w[0]] && b[w[0]] === b[w[1]] && b[w[0]] === b[w[2]]) {
+                        alert(b[w[0]] + ' Wins!');
+                        if (b[w[0]] === 'X') updateScore(score + 1);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        function initCatch() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            let pX = 160, bX = Math.random()*380, bY = 0, speed = 4;
+
+            window.onkeydown = e => keys[e.key] = true;
+            window.onkeyup = e => keys[e.key] = false;
+
+            gameInterval = setInterval(() => {
+                if (keys['ArrowLeft'] && pX > 0) pX -= 7;
+                if (keys['ArrowRight'] && pX < 320) pX += 7;
+
+                bY += speed;
+                if (bY > 400) {
+                    if (bX > pX && bX < pX + 80) { updateScore(score + 1); speed += 0.3; } 
+                    else { alert('Missed! Resetting.'); updateScore(0); speed = 4; }
+                    bY = 0; bX = Math.random()*380;
+                }
+
+                ctx.fillStyle = '#000'; ctx.fillRect(0,0,400,400);
+                ctx.fillStyle = '#10b981'; ctx.fillRect(pX, 370, 80, 15);
+                ctx.fillStyle = '#38bdf8'; ctx.fillRect(bX, bY, 15, 15);
+            }, 1000/60);
+        }
+
+        function initMemory() {
+            const area = document.getElementById('game-area');
+            const grid = document.createElement('div');
+            grid.className = 'memory-grid';
+            const emojis = ['🔥','🔥','💎','💎','🚀','🚀','⭐','⭐','🍀','🍀','👻','👻','🍉','🍉','👾','👾'].sort(() => 0.5 - Math.random());
+            let flipped = [];
+
+            emojis.forEach((emoji) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card'; card.innerText = emoji;
+                card.onclick = () => {
+                    if (card.classList.contains('flipped') || flipped.length >= 2) return;
+                    card.classList.add('flipped'); flipped.push(card);
+                    if (flipped.length === 2) {
+                        if (flipped[0].innerText === flipped[1].innerText) { updateScore(score + 1); flipped = []; } 
+                        else { setTimeout(() => { flipped.forEach(c => c.classList.remove('flipped')); flipped = []; }, 800); }
+                    }
+                };
+                grid.appendChild(card);
+            });
+            area.appendChild(grid);
+        }
+    </script>
+</body>
+</html>
