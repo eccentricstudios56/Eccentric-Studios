@@ -38,7 +38,7 @@ function getDefaultState() {
       { title: 'Studio workspace', image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80', caption: 'Creative studio setup' }
     ],
     homeVideos: [
-      { title: 'Brand reel', url: 'https://www.youtube.com/embed/ScMzIvxBSi4?rel=0' }
+      { title: 'Brand reel', url: 'https://youtu.be/l-npfrxgjhQ?si=kf5Ns1Adq5l6vnRF?rel=0' }
     ],
     projects: [
       { title: 'Launch Motion Identity', description: 'A sharp rebrand with launch motion and premium social assets.', image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80' },
