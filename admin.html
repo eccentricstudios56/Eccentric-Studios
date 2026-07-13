@@ -59,7 +59,7 @@
     <div class="container">
       <section class="hero-card" style="padding: 28px;">
         <div class="password-card" id="passwordCard">
-          <p class="pill-btn" style="display:inline-flex; margin-bottom:12px;">Universal Control Panel</p>
+          <p class="pill-btn" style="display:inline-flex; margin-bottom:12px;">Admin Access</p>
           <h1 style="margin-top:0;">Unlock the content manager</h1>
           <p style="color:var(--muted);">Enter your master password to sync changes universally to all visitors online.</p>
           <div class="field">
@@ -67,7 +67,7 @@
             <input id="adminPassword" type="password" placeholder="Enter password" />
           </div>
           <div class="admin-actions" style="justify-content:flex-start;">
-            <button class="primary-btn" type="button" id="unlockAdmin">Unlock Panel</button>
+            <button class="primary-btn" type="button" id="unlockAdmin">Unlock</button>
           </div>
           <p class="status" id="adminMessage"></p>
         </div>
@@ -141,11 +141,19 @@
 
   <script>
     // --- 1. CLOUD GATEWAY CONFIGURATION ---
-    const SUPABASE_URL = "https://YOUR_ACTUAL_SUPABASE_PROJECT_URL.supabase.co";
-    const SUPABASE_ANON_KEY = "YOUR_ACTUAL_SUPABASE_ANON_PUBLIC_KEY";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SUPABASE_URL = "https://aydluirdakbqlsyvjwip.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_TsOfJwvuDGIhZf1WNw2dfQ_DnqfWUoQ";
 
-    const MASTER_HOST_PASSWORD = "eccentricstudios56"; // Change to your desired secure admin password
+    // Injecting your master password directly into the request headers configuration object
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: {
+        headers: {
+          'x-studio-auth': 'eccentricstudios56'
+        }
+      }
+    });
+
+    const MASTER_HOST_PASSWORD = "eccentricstudios56"; 
     let cachedGlobalState = null;
 
     function normalize(value) {
@@ -285,9 +293,9 @@
     }
 
     function getFormState() {
-      const defaults = getDefaultState();
+      const state = cachedGlobalState || getDefaultState();
       return {
-        ...defaults,
+        ...state,
         heroTitle: document.getElementById('heroTitle').value,
         heroText: document.getElementById('heroText').value,
         heroImage: document.getElementById('heroImage').value,
@@ -331,7 +339,7 @@
       }
     }
 
-    showForm = () => {
+    function showForm() {
       document.getElementById('passwordCard').classList.add('hidden');
       document.getElementById('adminForm').classList.remove('hidden');
     }
@@ -355,10 +363,13 @@
       }
     }
 
-    // Initialize initial system page render load states directly from server hook rules
-    window.addEventListener('DOMContentLoaded', async () => {
-      cachedGlobalState = await loadStateFromServer();
-    });
+    function addItem(containerId, itemTemplate) {
+      const container = document.getElementById(containerId);
+      const card = document.createElement('div');
+      card.className = 'editor-card';
+      card.innerHTML = itemTemplate;
+      container.appendChild(card);
+    }
 
     document.getElementById('unlockAdmin').addEventListener('click', unlockAdmin);
     document.getElementById('adminPassword').addEventListener('keydown', (event) => {
@@ -384,14 +395,6 @@
       addItem('contactEditor', '<div class="field"><label>Name</label><input data-field="name" /></div><div class="field"><label>Phone</label><input data-field="phone" /></div><div class="field"><label>Email</label><input data-field="email" /></div><div class="field"><label>Instagram</label><input data-field="instagram" /></div><div class="field"><label>YouTube</label><input data-field="youtube" /></div><div class="field"><label>Facebook</label><input data-field="facebook" /></div>');
     });
 
-    function addItem(containerId, itemTemplate) {
-      const container = document.getElementById(containerId);
-      const card = document.createElement('div');
-      card.className = 'editor-card';
-      card.innerHTML = itemTemplate;
-      container.appendChild(card);
-    }
-
     document.getElementById('saveAdmin').addEventListener('click', () => {
       const state = getFormState();
       saveStateToCloud(state);
@@ -402,6 +405,11 @@
       populateForm(defaults);
       document.getElementById('saveStatus').textContent = 'Form reset to structural schema defaults (Click save changes to sync cloud).';
       document.getElementById('saveStatus').className = 'status';
+    });
+
+    // Initialize initial system page render load states directly from server hook rules
+    window.addEventListener('DOMContentLoaded', async () => {
+      cachedGlobalState = await loadStateFromServer();
     });
   </script>
 </body>
