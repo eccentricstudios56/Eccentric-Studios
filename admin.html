@@ -9,6 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     .admin-shell { padding: 32px 0 60px; }
     .password-card { max-width: 620px; margin: 0 auto; padding: 28px; border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05)); border: 1px solid var(--border); box-shadow: var(--shadow); }
@@ -56,15 +59,15 @@
     <div class="container">
       <section class="hero-card" style="padding: 28px;">
         <div class="password-card" id="passwordCard">
-          <p class="pill-btn" style="display:inline-flex; margin-bottom:12px;">Admin Access</p>
+          <p class="pill-btn" style="display:inline-flex; margin-bottom:12px;">Universal Control Panel</p>
           <h1 style="margin-top:0;">Unlock the content manager</h1>
-          <p style="color:var(--muted);">Set or enter a password to unlock the admin panel. The password is only stored in your browser.</p>
+          <p style="color:var(--muted);">Enter your master password to sync changes universally to all visitors online.</p>
           <div class="field">
             <label for="adminPassword">Password</label>
             <input id="adminPassword" type="password" placeholder="Enter password" />
           </div>
           <div class="admin-actions" style="justify-content:flex-start;">
-            <button class="primary-btn" type="button" id="unlockAdmin">Unlock</button>
+            <button class="primary-btn" type="button" id="unlockAdmin">Unlock Panel</button>
           </div>
           <p class="status" id="adminMessage"></p>
         </div>
@@ -127,18 +130,23 @@
           </div>
 
           <div class="admin-actions">
-            <button class="ghost-btn" type="button" id="resetAdmin">Reset</button>
-            <button class="primary-btn" type="button" id="saveAdmin">Save Changes</button>
+            <button class="ghost-btn" type="button" id="resetAdmin">Reset Fields</button>
+            <button class="primary-btn" type="button" id="saveAdmin">Save Changes Universally</button>
           </div>
-          <p class="status" id="saveStatus">Changes are saved for the whole website.</p>
+          <p class="status" id="saveStatus"></p>
         </form>
       </section>
     </div>
   </main>
 
   <script>
-    const STORAGE_PASSWORD_KEY = 'eccentric-admin-password';
-    const GLOBAL_KEY = 'eccentric-studios-data';
+    // --- 1. CLOUD GATEWAY CONFIGURATION ---
+    const SUPABASE_URL = "https://YOUR_ACTUAL_SUPABASE_PROJECT_URL.supabase.co";
+    const SUPABASE_ANON_KEY = "YOUR_ACTUAL_SUPABASE_ANON_PUBLIC_KEY";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const MASTER_HOST_PASSWORD = "eccentricstudios56"; // Change to your desired secure admin password
+    let cachedGlobalState = null;
 
     function normalize(value) {
       return value?.trim().toLowerCase().replace(/[^a-z0-9]/g, '') || '';
@@ -164,7 +172,7 @@
           { name: 'Deepika S.', rating: '5/5', text: 'Every detail felt premium and aligned with our brand goals.' }
         ],
         aboutName: 'Eccentric Studios',
-        aboutContacts: [{ name: 'V.Bharani Dharan', phone: '+91 95660 09292', email: 'info@eccentricstudios.in', instagram: '@eccentric_studios56', youtube: '@EccentricStudios-h7d', facebook: 'Eccentric Studios' }],
+        aboutContacts: [{ name: 'Nithran', phone: '+91 95660 09292', email: 'info@eccentricstudios.in', instagram: '@eccentric_studios56', youtube: '@EccentricStudios-h7d', facebook: 'Eccentric Studios' }],
         social: { instagram: 'https://www.instagram.com/eccentric_studios56/', facebook: 'https://www.facebook.com/', youtube: 'http://www.youtube.com/@EccentricStudios-h7d' },
         contact: { email: 'info@eccentricstudios.in', phone: '+91 95660 09292', location: 'Chennai, India' },
         formTitle: 'Order Form',
@@ -176,20 +184,24 @@
       };
     }
 
-    function loadState() {
-      const defaults = getDefaultState();
-      const existing = JSON.parse(localStorage.getItem(GLOBAL_KEY) || '{}');
-      return {
-        ...defaults,
-        ...existing,
-        social: { ...defaults.social, ...(existing.social || {}) },
-        contact: { ...defaults.contact, ...(existing.contact || {}) },
-        projects: Array.isArray(existing.projects) ? existing.projects : defaults.projects,
-        reviews: Array.isArray(existing.reviews) ? existing.reviews : defaults.reviews,
-        homeImages: Array.isArray(existing.homeImages) ? existing.homeImages : defaults.homeImages,
-        homeVideos: Array.isArray(existing.homeVideos) ? existing.homeVideos : defaults.homeVideos,
-        aboutContacts: Array.isArray(existing.aboutContacts) ? existing.aboutContacts : defaults.aboutContacts
-      };
+    // --- 2. UNIVERSAL CLOUD READ TRANSACTION ---
+    async function loadStateFromServer() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('studio_config')
+          .select('global_state')
+          .eq('id', 1)
+          .single();
+
+        if (error || !data) {
+          console.log("No remote config row found. Using initial defaults.");
+          return getDefaultState();
+        }
+        return data.global_state;
+      } catch (err) {
+        console.error("Cloud Fetch Interrupted:", err);
+        return getDefaultState();
+      }
     }
 
     function createField(label, key, value, multiline) {
@@ -273,9 +285,9 @@
     }
 
     function getFormState() {
-      const state = loadState();
+      const defaults = getDefaultState();
       return {
-        ...state,
+        ...defaults,
         heroTitle: document.getElementById('heroTitle').value,
         heroText: document.getElementById('heroText').value,
         heroImage: document.getElementById('heroImage').value,
@@ -296,11 +308,30 @@
       };
     }
 
-    function saveState(state) {
-      localStorage.setItem(GLOBAL_KEY, JSON.stringify(state));
+    // --- 3. UNIVERSAL CLOUD WRITE TRANSACTION ---
+    async function saveStateToCloud(state) {
+      const saveStatus = document.getElementById('saveStatus');
+      saveStatus.textContent = 'Synchronizing configuration data to cloud database...';
+      saveStatus.className = 'status';
+
+      try {
+        const { error } = await supabaseClient
+          .from('studio_config')
+          .upsert({ id: 1, global_state: state });
+
+        if (error) throw error;
+
+        cachedGlobalState = state;
+        saveStatus.textContent = 'Saved successfully globally! Refresh any site layout page to view real-time adjustments.';
+        saveStatus.className = 'status success';
+      } catch (err) {
+        console.error("Cloud Sync Failure:", err);
+        saveStatus.textContent = 'Error: System failed to update remote cloud database.';
+        saveStatus.className = 'status error';
+      }
     }
 
-    function showForm() {
+    showForm = () => {
       document.getElementById('passwordCard').classList.add('hidden');
       document.getElementById('adminForm').classList.remove('hidden');
     }
@@ -311,37 +342,23 @@
       el.className = `status ${type || ''}`.trim();
     }
 
-    function unlockAdmin() {
+    async function unlockAdmin() {
       const entered = document.getElementById('adminPassword').value;
-      const normalized = normalize(entered);
-      const stored = localStorage.getItem(STORAGE_PASSWORD_KEY);
-      const isAuthorized = stored ? normalized && normalize(stored) === normalized : Boolean(normalized);
-
-      if (!stored) {
-        if (!entered.trim()) {
-          setStatus('Please choose a password to continue.', 'error');
-          return;
-        }
-        localStorage.setItem(STORAGE_PASSWORD_KEY, entered);
+      if (normalize(entered) === normalize(MASTER_HOST_PASSWORD)) {
+        setStatus('Connecting and retrieving cloud state data metrics...', 'success');
+        cachedGlobalState = await loadStateFromServer();
         showForm();
-        populateForm(loadState());
-        setStatus('Password set and access granted.', 'success');
-      } else if (isAuthorized) {
-        showForm();
-        populateForm(loadState());
-        setStatus('Access granted. You can now update the website.', 'success');
+        populateForm(cachedGlobalState);
+        setStatus('Access granted. Cloud synchronized.', 'success');
       } else {
-        setStatus('Incorrect password. Please try again.', 'error');
+        setStatus('Incorrect master password string. Please try again.', 'error');
       }
     }
 
-    function addItem(containerId, itemTemplate) {
-      const container = document.getElementById(containerId);
-      const card = document.createElement('div');
-      card.className = 'editor-card';
-      card.innerHTML = itemTemplate;
-      container.appendChild(card);
-    }
+    // Initialize initial system page render load states directly from server hook rules
+    window.addEventListener('DOMContentLoaded', async () => {
+      cachedGlobalState = await loadStateFromServer();
+    });
 
     document.getElementById('unlockAdmin').addEventListener('click', unlockAdmin);
     document.getElementById('adminPassword').addEventListener('keydown', (event) => {
@@ -367,21 +384,25 @@
       addItem('contactEditor', '<div class="field"><label>Name</label><input data-field="name" /></div><div class="field"><label>Phone</label><input data-field="phone" /></div><div class="field"><label>Email</label><input data-field="email" /></div><div class="field"><label>Instagram</label><input data-field="instagram" /></div><div class="field"><label>YouTube</label><input data-field="youtube" /></div><div class="field"><label>Facebook</label><input data-field="facebook" /></div>');
     });
 
+    function addItem(containerId, itemTemplate) {
+      const container = document.getElementById(containerId);
+      const card = document.createElement('div');
+      card.className = 'editor-card';
+      card.innerHTML = itemTemplate;
+      container.appendChild(card);
+    }
+
     document.getElementById('saveAdmin').addEventListener('click', () => {
       const state = getFormState();
-      saveState(state);
-      document.getElementById('saveStatus').textContent = 'Saved successfully. Refresh any page to see the changes.';
-      document.getElementById('saveStatus').className = 'status success';
+      saveStateToCloud(state);
     });
 
     document.getElementById('resetAdmin').addEventListener('click', () => {
       const defaults = getDefaultState();
       populateForm(defaults);
-      document.getElementById('saveStatus').textContent = 'Form reset to defaults.';
+      document.getElementById('saveStatus').textContent = 'Form reset to structural schema defaults (Click save changes to sync cloud).';
       document.getElementById('saveStatus').className = 'status';
     });
-
-    populateForm(loadState());
   </script>
 </body>
 </html>
