@@ -70,5 +70,67 @@
 
   <script src="scripts/language.js"></script>
   <script src="scripts/site-content.js"></script>
+  <script>
+    // --- 1. CLOUD GATEWAY CONFIGURATION ---
+    const SUPABASE_URL = "https://aydluirdakbqlsyvjwip.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_TsOfJwvuDGIhZf1WNw2dfQ_DnqfWUoQ";
+
+    // Public read connection client
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const defaultReviews = [
+      { name: 'Nisha Rao', rating: '5/5', text: 'The creative strategy and final content were beyond expectations.' },
+      { name: 'Aarav Menon', rating: '5/5', text: 'Cinematic, polished, and incredibly responsive throughout the process.' },
+      { name: 'Deepika S.', rating: '5/5', text: 'Every detail felt premium and aligned with our brand goals.' }
+    ];
+
+    // --- 2. UNIVERSAL CLOUD READ TRANSACTION ---
+    async function loadReviewsFromCloud() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('studio_config')
+          .select('global_state')
+          .eq('id', 1)
+          .single();
+
+        if (error || !data || !data.global_state.reviews) {
+          return defaultReviews;
+        }
+        return data.global_state.reviews;
+      } catch (err) {
+        console.error("Cloud review query loop error:", err);
+        return defaultReviews;
+      }
+    }
+
+    // Renders stars based on input metrics
+    function buildStars(ratingString) {
+      const num = parseInt(ratingString) || 5;
+      return '★'.repeat(num) + '☆'.repeat(5 - num);
+    }
+
+    // Wires components live to your UI frame container
+    async function displayLiveReviews() {
+      const reviewsList = await loadReviewsFromCloud();
+      const targetContainer = document.getElementById('reviewsGrid') || document.getElementById('reviewsContainer');
+      
+      if (!targetContainer) return;
+      targetContainer.innerHTML = '';
+
+      reviewsList.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'glass-card review-card';
+        card.innerHTML = `
+          <div class="stars">${buildStars(item.rating)}</div>
+          <p class="text">"${item.text || ''}"</p>
+          <div class="name">${item.name || 'Anonymous Client'}</div>
+          <div class="role">Verified Project Partner</div>
+        `;
+        targetContainer.appendChild(card);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', displayLiveReviews);
+  </script>
 </body>
 </html>
