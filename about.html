@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <header class="topbar">
@@ -100,6 +101,98 @@
   </div>
   <script src="scripts/language.js"></script>
   <script src="scripts/site-content.js"></script>
+  <script>// --- 1. CLOUD GATEWAY CONFIGURATION ---
+    const SUPABASE_URL = "https://aydluirdakbqlsyvjwip.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_TsOfJwvuDGIhZf1WNw2dfQ_DnqfWUoQ";
+
+    // Public read connection client
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const defaultAboutData = {
+      aboutName: 'Eccentric Studios',
+      aboutText: 'Eccentric Studios is a premium creative agency blending strategy, design, and motion to translate ideas into high-impact brand stories.',
+      missionText: 'Craft campaigns that feel fresh, strategic, and unforgettable.',
+      visionText: 'Elevate every launch with cinematic storytelling and precise execution.',
+      contact: {
+        email: 'info@eccentricstudios.in',
+        phone: '+91 95660 09292',
+        location: 'Chennai, India'
+      },
+      aboutContacts: [
+        { name: 'V.Bharani Dharan', phone: '+91 95660 09292', email: 'eccentricstudios56@gmail.com', instagram: '@eccentric_studios56', youtube: '@EccentricStudios-h7d', facebook: 'eccentric studios' }
+      ]
+    };
+
+    // --- 2. UNIVERSAL CLOUD READ TRANSACTION ---
+    async function loadAboutFromCloud() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('studio_config')
+          .select('global_state')
+          .eq('id', 1)
+          .single();
+
+        if (error || !data) {
+          return defaultAboutData;
+        }
+        return data.global_state;
+      } catch (err) {
+        console.error("Cloud about information fetch fault:", err);
+        return defaultAboutData;
+      }
+    }
+
+    // Wires live metadata variables smoothly into text elements
+    async function bindLiveAboutContent() {
+      const state = await loadAboutFromCloud();
+
+      // Dynamic Element Updates (matches typical template elements if present)
+      const studioTitle = document.getElementById('aboutStudioName') || document.querySelector('h1');
+      if (studioTitle && state.aboutName) studioTitle.textContent = state.aboutName;
+
+      const aboutDesc = document.getElementById('aboutDescription') || document.getElementById('aboutText');
+      if (aboutDesc && state.aboutText) aboutDesc.textContent = state.aboutText;
+
+      const missionDesc = document.getElementById('missionDescription') || document.getElementById('missionText');
+      if (missionDesc && state.missionText) missionDesc.textContent = state.missionText;
+
+      const visionDesc = document.getElementById('visionDescription') || document.getElementById('visionText');
+      if (visionDesc && state.visionText) visionDesc.textContent = state.visionText;
+
+      // Update basic context loops
+      if (state.contact) {
+        const emailEl = document.getElementById('contactEmail');
+        if (emailEl) emailEl.textContent = state.contact.email || '';
+        
+        const phoneEl = document.getElementById('contactPhone');
+        if (phoneEl) phoneEl.textContent = state.contact.phone || '';
+        
+        const locEl = document.getElementById('contactLocation');
+        if (locEl) locEl.textContent = state.contact.location || '';
+      }
+
+      // Render custom team/studio contact loops if container exists
+      const contactsGrid = document.getElementById('aboutContactsGrid') || document.getElementById('contactsContainer');
+      if (contactsGrid && Array.isArray(state.aboutContacts)) {
+        contactsGrid.innerHTML = '';
+        state.aboutContacts.forEach(person => {
+          const card = document.createElement('div');
+          card.className = 'glass-card team-card';
+          card.innerHTML = `
+            <h3>${person.name || 'Team Member'}</h3>
+            <p style="margin: 4px 0; color: var(--accent-2); font-size: 0.95rem;">Creative Executive</p>
+            <div style="margin-top: 12px; font-size: 0.9rem; display: grid; gap: 6px; color: var(--muted);">
+              <div><i class="fa-solid fa-phone" style="margin-right: 6px;"></i> ${person.phone || ''}</div>
+              <div><i class="fa-solid fa-envelope" style="margin-right: 6px;"></i> ${person.email || ''}</div>
+              <div><i class="fa-brands fa-instagram" style="margin-right: 6px;"></i> ${person.instagram || ''}</div>
+            </div>
+          `;
+          contactsGrid.appendChild(card);
+        });
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', bindLiveAboutContent);</script>
   <footer>
     <div class="container">
       <span data-i18n="footerCopy">© 2026 Eccentric Studios</span>
