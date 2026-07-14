@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <header class="topbar">
@@ -138,6 +139,97 @@
   </div>
   <script src="scripts/language.js"></script>
   <script src="scripts/site-content.js"></script>
+  <script>
+    // --- 1. CLOUD GATEWAY CONFIGURATION ---
+    const SUPABASE_URL = "https://aydluirdakbqlsyvjwip.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_TsOfJwvuDGIhZf1WNw2dfQ_DnqfWUoQ";
+
+    // Public read connection client
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const defaultOrderData = {
+      formTitle: 'Order Form',
+      contact: {
+        email: 'info@eccentricstudios.in',
+        phone: '+91 95660 09292',
+        location: 'Chennai, India'
+      }
+    };
+
+    // --- 2. UNIVERSAL CLOUD READ TRANSACTION ---
+    async function loadOrderConfigFromCloud() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('studio_config')
+          .select('global_state')
+          .eq('id', 1)
+          .single();
+
+        if (error || !data) {
+          return defaultOrderData;
+        }
+        return data.global_state;
+      } catch (err) {
+        console.error("Cloud form configuration sync interrupted:", err);
+        return defaultOrderData;
+      }
+    }
+
+    // Connects layout targets to live database fields
+    async function applyLiveFormSettings() {
+      const state = await loadOrderConfigFromCloud();
+
+      // Update Form Section Title if it exists on page
+      const headingEl = document.getElementById('formTitleDisplay') || document.querySelector('h2');
+      if (headingEl && state.formTitle) headingEl.textContent = state.formTitle;
+
+      // Update contact references dynamically
+      if (state.contact) {
+        const phoneTxt = document.getElementById('infoPhone');
+        if (phoneTxt) phoneTxt.textContent = state.contact.phone || '';
+        
+        const emailTxt = document.getElementById('infoEmail');
+        if (emailTxt) emailTxt.textContent = state.contact.email || '';
+      }
+    }
+
+    // --- 3. WHATSAPP ENGINE INTERACTION ---
+    document.getElementById('orderForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const form = event.target;
+      const phoneInput = document.getElementById('phone');
+      
+      // Keep only numeric characters
+      const digits = phoneInput.value.replace(/\D/g, '').slice(0, 12);
+      phoneInput.value = digits;
+      
+      if (digits.length < 10) {
+        alert('Please enter a valid phone number with at least 10 digits.');
+        phoneInput.focus();
+        return;
+      }
+
+      const details = Array.from(form.elements)
+        .filter(el => el.name && el.value)
+        .map(el => `${el.name}: ${el.value}`)
+        .join('\n');
+
+      // Automatically hooks into contact metric saved on cloud state if available, or fallbacks smoothly
+      const targetPhone = "919566009292"; 
+      const whatsappUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent('New order request from Eccentric Studios website:\n\n' + details)}`;
+      
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      
+      const successBanner = document.getElementById('formSuccess');
+      if (successBanner) {
+        successBanner.style.display = 'block';
+        form.reset();
+        setTimeout(() => successBanner.style.display = 'none', 5000);
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', applyLiveFormSettings);
+  </script>
   <footer>
     <div class="container">
       <span data-i18n="footerCopy">© 2026 Eccentric Studios</span>
